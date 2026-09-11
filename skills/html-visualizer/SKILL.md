@@ -17,7 +17,7 @@ description: 把長文件 / 報告 / 規格 / 設計決策（ADR）/ 架構說�
 
 ## 預設視覺風格：Anthropic / Claude 官方品牌風
 
-預設用 **Anthropic 風格**（ivory 米白底 + clay 赤陶 accent + serif 標題 + italic 強調 + warm gray）— editorial / book / magazine 質感、跟 Claude 官方品牌一致。
+預設用 **Anthropic 風格**（ivory 米白底 + clay 赤陶 accent + serif 標題 + clay 色強調 + warm gray）— editorial / book / magazine 質感、跟 Claude 官方品牌一致。
 
 完整 design tokens 見 `references/color-and-typography.md`、Anthropic-signature 元件見 `references/component-library.md` § 首段。Reference 範本見 `references/examples/anthropic-gallery/index.html`。
 
@@ -148,6 +148,7 @@ description: 把長文件 / 報告 / 規格 / 設計決策（ADR）/ 架構說�
     | class 撞車 | 同一元素掛兩個都在管佈局的 class；跨 `<style>` 區塊判 `✗`、同區塊只提示 | 09-08：為了讓「每段都有視覺元件」變綠套了共用樣式的 `.timeline`，中文被壓成一個字一行。它抓原因、下一列的四種崩潰抓症狀 |
     | 版面健檢 | 390／768／1440px 真渲染：整頁橫向溢出、凸出視窗、被切掉的文字；四種可讀性崩潰（直排、壓扁、對比不足、被蓋住）；表格欄位失衡與 `nowrap` 長內容；每個寬度存一張整頁截圖並印路徑 | 跑版不在標記裡，只有座標算數（首次上線抓到自家頁 6 處）。四種崩潰不溢出也不切字，只量溢出的檢查全放行。09-09：為了過 390px 直排檢查給表格末欄加 `nowrap`，桌機兩欄剩一行三四個字 |
     | SVG 文字 | 偵測到 `<svg>` 自動跑 `svg-text-check.mjs`：text 不超出 viewBox 與遮罩、線端點指到存在的節點 | 09-05：版面健檢的 `scrollWidth` 對 SVG 沒意義，會誤報「被切掉」 |
+    | CJK 斜體 | 與版面健檢同一支腳本：computed `font-style` 非 normal、且元素自身的直接文字節點含中文 → `✗` | 09-11：中文沒有 italic 字形，套了只會被幾何傾斜。這條規則本來就確立過、也修乾淨過，交棒到本 skill 時掉了，反而寫進核心風格宣告，實測單頁 17 處。CSS 可能來自任何一層選擇器，靜態 grep 抓不到；`font-synthesis-style:none` 對 CJK fallback 也無效 |
     | Session 識別 | `VT_SESSION` 已填值 | 多視窗並行時分不出來源 |
     | 拍板機制 | 決策卡↔選項↔摘要三方一致、每題補充框且被抓取、複製三件套、無下拉選單、無範本 placeholder | 範本 placeholder 沒砍乾淨，使用者預覽看到不相干的舊題目 |
     | 閱讀動線 | 第一題位置 ≤ 40%、題數 ≥ 5 有題目地圖 | 舊版第一題平均落在 62% |
@@ -183,10 +184,10 @@ description: 把長文件 / 報告 / 規格 / 設計決策（ADR）/ 架構說�
 | 元素 | 細節 |
 |---|---|
 | `<title>` | 對應內容主題、不要用「Untitled」/「Document」 |
-| Tailwind CDN | `<script src="https://cdn.tailwindcss.com"></script>`、不用 build tool |
+| Tailwind CDN（選配加速器）| `<script src="https://cdn.tailwindcss.com"></script>`、不用 build tool。⚠️ **版面骨架不能只靠它**：配色與 layout 要由 inline `<style>` 承載，CDN 只當一次性微調用。歸檔產出要幾個月後還打得開，而 play CDN 官方標明非 production 用、隨時可能限流或改行為。實測擋掉該網域：flex 49→0、grid 24→0，sidebar 攤平佔滿首屏、sticky bar 蓋住內文。範本已在 `<style>` 內備好同名 fallback（preflight + utility + `md:`/`lg:` variants），**新增 utility class 時一併補進去** |
 | 配色 token | 從 `references/color-and-typography.md` 複製 CSS variables、不自創 |
 | 字體 stack | Apple system + Noto Sans TC、見 typography reference |
-| 容器寬度 | 主容器 `width: min(94vw, 1760px)` 寬版置中（吃滿寬螢幕、不浪費兩側留白）；**長段落文字另加 `max-width: 72ch` 行長護欄**、grid / 卡片 / 對比 / 表格 / mock 吃滿寬。範本 `.wrap` 已內建此策略、直接複製即可 |
+| 容器寬度 | 主容器 `width: min(94vw, 1760px)` 寬版置中（吃滿寬螢幕、不浪費兩側留白）；**長段落文字另加 `max-width: 72ch` 行長護欄**、grid / 卡片 / 對比 / 表格 / mock 吃滿寬。範本已內建此策略、直接複製即可——`base-template` / `explainer` / `spec-alignment` 是 `.wrap` class，`marathon-decision-sheet` 是 `max-w-[1760px] w-[94vw] mx-auto`（`<style>` 內有同名 fallback，CDN 掛掉仍生效）|
 | Header | 標題 + 副標、含日期 / 進度 / context |
 | 主要區段 | `<section id="...">` 帶 anchor 給 nav 用 |
 | Footer / Sticky bar | 如有互動或 export 需求、加 sticky bottom bar |
@@ -226,6 +227,7 @@ description: 把長文件 / 報告 / 規格 / 設計決策（ADR）/ 架構說�
 | Code path / 行號 / 函式名 / 變數名 當主要內容 | 對非技術受眾維持：用邏輯描述、必要時 monospace 註腳。⭐ **開發者受眾的程式解說頁例外**（2026-08-29 拍板）：函式名 / 元件名就是內容本身、檔案路徑降級為灰字註腳（code-shape 元件的做法）|
 | 程式碼路徑形式的清單（如 `packages/x/y/z.ts:34`）出現在 hero 或主視覺 | 影響快速瀏覽；改寫成自然語言 |
 | 深淺色切換（除非使用者明確要求）| 預設淺色 only、減少 CSS 複雜度與 dark mode 適配 bug |
+| ⭐⭐ 對中文套斜體（`font-style: italic` / `<i>` / 會命中中文的 `em` 選擇器）| 中文沒有 italic 字形，瀏覽器只能把正體字整個幾何傾斜（synthetic oblique），筆畫變形、重心歪。`font-synthesis-style: none` 擋不掉——實測 Chromium 對 CJK fallback 字體不套用。強調改用 clay 色 + `font-weight: 600`；真要斜體的純西文片段在該處單獨寫，不要放進全域選擇器。`verify.py` 會抓（CJK-italic 檢查），來龍去脈見 `references/incidents.md` 2026-09-11 |
 | 字數爆炸的長段落 | 改用卡片 / 表格 / 視覺化；段落超過 4 行考慮拆 |
 | ⭐ 整段只有純文字、沒有任何視覺元件 | 能畫的東西寫成文字＝要 user 自己在腦裡還原。每段都先問「這段能不能用畫的」（說明與描述盡量圖像化）|
 | ⭐⭐ 把拍板題全部堆到文件尾段、跟它的背景說明分開 | 讀者拍板時找不到回去的路，於是每張決策卡只好重述背景 → 同件事講兩次。有背景的題就地放在該段末尾，尾段只留不需背景的程序題 |
