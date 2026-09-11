@@ -174,9 +174,11 @@ def check_js_dom_refs(h):
 def check_layout(path):
     """真的把頁面渲染出來、量它有沒有跑版。回傳 (狀態, 輸出行)。
 
-    狀態：'ok' 全寬度乾淨 / 'bad' 有跑版 / 'skip' 沒有瀏覽器可跑。
+    狀態：'ok' 全寬度乾淨且無中文斜體 / 'bad' 有跑版或中文被套斜體 / 'skip' 沒有瀏覽器可跑。
     存在理由：跑版不在標記裡——同一份 HTML 在 390px 整片凸出、在 1440px 好好的。
     靜態掃 class 名稱猜不到，只有量出來的座標算數。
+    同一支腳本順便抓中文被套斜體：那要 computed style 才看得出來（CSS 可能來自
+    任何一層選擇器），而且 font-synthesis-style:none 對 CJK fallback 無效、擋不掉。
     """
     script = os.path.join(os.path.dirname(os.path.abspath(__file__)), "layout-check.mjs")
     if not shutil.which("node") or not os.path.exists(script):

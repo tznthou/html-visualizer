@@ -227,6 +227,21 @@ function probe() {
     }
   }
 
+  // 中文被套斜體（0911 回歸：中文沒有 italic 字形，瀏覽器只能把正體字整個幾何傾斜，
+  // 筆畫變形、重心歪。font-synthesis-style:none 對 CJK fallback 字體無效，擋不掉，
+  // 所以只能在這裡抓。只看元素自身的直接文字節點，避免「父層 italic + 子層西文」誤報）
+  const CJK = /[㐀-䶿一-鿿豈-﫿]/;
+  const cjkItalic = [];
+  for (const el of document.querySelectorAll("*")) {
+    if (getComputedStyle(el).fontStyle === "normal") continue;
+    const own = Array.from(el.childNodes)
+      .filter((n) => n.nodeType === 3)
+      .map((n) => n.textContent)
+      .join("")
+      .trim();
+    if (own && CJK.test(own)) cjkItalic.push({ what: label(el) });
+  }
+
   // 只留最外層的凸出元素——父層凸出時子層必然跟著凸，全列會淹沒訊號
   const outermost = overflowing.filter(
     (a) => !overflowing.some((b) => b.el !== a.el && b.el.contains(a.el)),
@@ -248,6 +263,8 @@ function probe() {
     invisible: invisible.slice(0, 5).map((x) => ({ what: label(x.el), ratio: x.ratio })),
     covered: covered.slice(0, 5).map((x) => ({ what: label(x.el), by: label(x.by) })),
     lopsided: lopsided.slice(0, 5).map((x) => ({ what: label(x.el), col: x.col, w: x.w, lines: x.lines, widest: x.widest, nowrap: !!x.nowrap })),
+    cjkItalic: cjkItalic.slice(0, 8),
+    cjkItalicTotal: cjkItalic.length,
   };
 }
 
@@ -319,6 +336,23 @@ for (const r of report) {
     bad++;
     console.log(`  ${r.width}px  ✗ ${issues.length} 項  截圖 ${r.shot}`);
     for (const i of issues) console.log(`         ${i}`);
+  }
+}
+
+// 中文斜體與視窗寬度無關，三個寬度結果相同，只報一次
+const firstOk = report.find((r) => !r.error);
+if (firstOk) {
+  const cjk = firstOk.cjkItalic || [];
+  const total = firstOk.cjkItalicTotal ?? cjk.length;
+  if (total) {
+    bad++;
+    console.log(`  CJK 斜體  ✗ ${total} 處 — 中文沒有 italic 字形，瀏覽器只能幾何傾斜（筆畫變形）`);
+    for (const c of cjk) console.log(`         ${c.what}`);
+    if (total > cjk.length) console.log(`         …另有 ${total - cjk.length} 處未列出`);
+    console.log(`         改法：強調改用 clay 色 + font-weight:600；真要斜體的純西文片段單獨寫，`);
+    console.log(`         不要放進會命中中文的選擇器。見 references/color-and-typography.md`);
+  } else {
+    console.log(`  CJK 斜體  ✓ 無中文被套斜體`);
   }
 }
 process.exit(bad ? 1 : 0);

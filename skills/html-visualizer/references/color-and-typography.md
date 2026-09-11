@@ -16,7 +16,7 @@
   --slate:  #141413;   /* 主要文字 / 標題 */
 
   /* ── Anthropic 招牌色 ──────────── */
-  --clay:   #D97757;   /* 主 accent — 連結 / italic 強調 / hover */
+  --clay:   #D97757;   /* 主 accent — 連結 / 強調 / hover */
   --clay-d: #B85C3E;   /* 深 clay — 主要 CTA */
   --oat:    #E3DACC;   /* 燕麥 — hover bg / 裝飾 */
   --olive:  #788C5D;   /* 橄欖綠 — 次強調 / 成功 / 採納 */
@@ -58,7 +58,7 @@
 | 主要文字 | `--slate` | h1 h2 標題、主要文字 |
 | 次要文字 | `--g700` | 內文、副說明 |
 | 弱化文字 | `--g500` | metadata / mono label / 註腳 |
-| 主 accent | `--clay` | h1 italic 強調、連結、section index、hover |
+| 主 accent | `--clay` | h1 強調（色 + 字重、不用斜體）、連結、section index、hover |
 | Hover 區塊底 | `--oat` | card thumbnail hover、輕微 emphasis |
 | 次 accent | `--olive` | 圖示分色、次強調、成功 |
 | 邊線 | `--g300` | 1.5px 細邊（不是 1px、不是 2px）|
@@ -98,7 +98,7 @@
 
 ## 字體規則（最重要的差異）
 
-### 標題用 serif + italic 強調
+### 標題用 serif + clay 色強調（不用斜體）
 
 ```css
 h1, h2, h3 {
@@ -124,18 +124,23 @@ h3 {
   letter-spacing: -0.008em;
 }
 
-/* italic 強調 */
+/* 強調：色彩承載，不疊斜體 */
 h1 em, h2 em {
-  font-style: italic;
+  font-style: normal;
+  font-weight: 600;
   color: var(--clay);
 }
 ```
 
 ```html
-<h1>This is the <em>important</em> part of the title</h1>
+<h1>標題裡<em>最重要</em>的那一段</h1>
 ```
 
-→ Italic 不是裝飾、是 strong emphasis、視覺重點。
+→ 強調由 clay 色承載，em 再重一級字重（600，比標題本身的 500 明顯、又不到會觸發合成粗體的 700）。
+
+⚠️ **不要對中文用 `font-style: italic`**。中文字沒有 italic 字形，瀏覽器只能把正體字整個幾何傾斜（synthetic oblique），筆畫變形、重心歪掉。`font-synthesis-style: none` 擋不掉——實測 Chromium 對 CJK fallback 字體不套用該屬性，位圖與未設定時完全相同。唯一可靠的做法是不要在會吃到中文的選擇器上寫 italic。
+
+中英文用同一條規則統一處理：英文強調也不斜體，換來的是中英混排時的視覺一致。真正需要斜體的純西文片段（書名、學名、西文術語），在該處單獨寫 `font-style: italic`，不要放進會命中中文的全域規則。
 
 ### 內文用 system sans
 
@@ -257,7 +262,7 @@ TOC pill gap：8px
 
 - **暖色不刺眼**：`#FAF9F5` ivory 比純白柔和、長閱讀不疲勞
 - **clay 是 Anthropic 招牌**：對齊官方品牌、立刻識別「這是 Claude 做的」
-- **Serif 標題 + italic 強調**：editorial / book / magazine 質感、提升閱讀儀式感
+- **Serif 標題 + clay 色強調**：editorial / book / magazine 質感、提升閱讀儀式感
 - **三字體分工**：serif（標題權威）/ sans（內文可讀）/ mono（metadata 機器感）— 角色清楚不混
 - **Warm gray**：g100-g700 是暖灰、跟 ivory 同色系、不會出現「黑白藍」科技感
 - **1.5px 邊線**：比 1px 厚實、比 2px 不刺、editorial 風的 detail

@@ -750,7 +750,6 @@ window.vtBuildDecisionExport = buildClaudePrompt;
   .vt-comment-item .item-quote {
     font-size: 11.5px;
     color: var(--g500);
-    font-style: italic;
     border-left: 2px solid var(--oat);
     padding-left: 8px;
     line-height: 1.4;
