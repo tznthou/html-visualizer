@@ -140,6 +140,14 @@ h1 em, h2 em {
 
 ⚠️ **不要對中文用 `font-style: italic`**。中文字沒有 italic 字形，瀏覽器只能把正體字整個幾何傾斜（synthetic oblique），筆畫變形、重心歪掉。`font-synthesis-style: none` 擋不掉——實測 Chromium 對 CJK fallback 字體不套用該屬性，位圖與未設定時完全相同。唯一可靠的做法是不要在會吃到中文的選擇器上寫 italic。
 
+⚠️ **`<em>` 要顯式覆蓋，不能只靠「我沒寫 italic」**。瀏覽器預設樣式本來就有 `em { font-style: italic }`，Tailwind preflight 也不 reset 它——範本沒定義，UA 預設就生效。所以每份範本都要帶這一條（五份範本已內建）：
+
+```css
+em { font-style: normal; font-weight: 600; color: var(--clay); }
+```
+
+這條是實測抓出來的：改完所有範本 CSS 之後產出一份新頁面，自檢仍報一處 CJK 斜體，來源就是內文一個包中文的 `<em>`。
+
 中英文用同一條規則統一處理：英文強調也不斜體，換來的是中英混排時的視覺一致。真正需要斜體的純西文片段（書名、學名、西文術語），在該處單獨寫 `font-style: italic`，不要放進會命中中文的全域規則。
 
 ### 內文用 system sans

@@ -6,6 +6,10 @@
     <title>__TITLE__</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+      /* 內文的 <em>：覆蓋瀏覽器預設的 italic。中文沒有 italic 字形，
+         UA 預設的 em 會讓中文被幾何傾斜——範本沒定義就等於預設生效。 */
+      em { font-style: normal; font-weight: 600; color: var(--clay); }
+
       /* ════════════════════════════════════════════ */
       /* Anthropic / Claude 官方品牌風 design tokens     */
       /* ════════════════════════════════════════════ */

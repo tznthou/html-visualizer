@@ -25,6 +25,9 @@
       button{background-color:transparent;background-image:none;text-transform:none}
       img,svg,video,canvas{display:block;vertical-align:middle;max-width:100%;height:auto}
       a{color:inherit;text-decoration:inherit}
+      /* 內文的 <em>：覆蓋瀏覽器預設的 italic（preflight 不含 em）。中文沒有
+         italic 字形，UA 預設會讓中文被幾何傾斜——範本沒定義就等於預設生效。 */
+      em{font-style:normal;font-weight:600;color:var(--clay)}
 
       .flex{display:flex} .grid{display:grid} .hidden{display:none} .sticky{position:sticky}
       .flex-wrap{flex-wrap:wrap}
