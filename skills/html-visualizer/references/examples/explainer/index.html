@@ -110,15 +110,20 @@
         background: var(--clay);
         flex-shrink: 0;
       }
+      /* 內距寫進 class，不像 marathon 那樣靠 HTML 上的 p-* utility 補：
+         純展示頁的內容是現生的，漏掉 utility 就變成文字貼著圓角邊框；
+         而且本範本沒有 Tailwind fallback，utility 在 CDN 不可達時會失效。 */
       .card {
         background: var(--bg-card);
         border: 1.5px solid var(--border);
         border-radius: 14px;
+        padding: 20px 22px;
       }
       .card-soft {
         background: var(--bg-soft);
         border: 1.5px solid var(--border);
         border-radius: 10px;
+        padding: 14px 16px;
       }
       .sec-head {
         display: flex;
