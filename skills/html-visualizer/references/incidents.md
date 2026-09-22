@@ -66,7 +66,15 @@
 
 最糟的一處在全頁評論 snippet 的 `.item-quote`，而全頁評論是「必含元素」預設內建——等於每份產出都帶一條「把使用者的中文評論引用幾何傾斜」的規則。那個元素本來就有 `--g500` 灰字 + `border-left` 標示引用，italic 是多餘的第三層。
 
-**捷徑不存在**：一行全域 `font-synthesis-style: none` 看起來能當自動防呆網，實測無效——Chromium 對 CJK fallback 字體不套用它，位圖與未設定時逐像素相同（computed 值確實是 `none`，屬性被支援，只是不生效）。沒有自動防呆，只能逐處顯式 `font-style: normal` 並用機器把關。
+**捷徑不存在**（❌ 2026-09-23 推翻，見下）：一行全域 `font-synthesis-style: none` 看起來能當自動防呆網，當時實測判定無效——Chromium 對 CJK fallback 字體不套用它，位圖與未設定時逐像素相同（computed 值確實是 `none`，屬性被支援，只是不生效）。據此放棄自動防呆，改成逐處顯式 `font-style: normal` 並用機器把關。
+
+> ### 2026-09-23 更正：上面那段是錯的，保險絲有效
+>
+> 重測三條字體路徑（serif fallback／sans fallback／明指 PingFang TC），屬性寫在元素上與設在 `body` 靠繼承都驗：加上 `font-synthesis: none` 之後，CJK italic 的位圖與 `normal` **逐像素相同**——與原記載正好相反。長手的 `font-synthesis-style: none` 同樣有效；Latin 的真 italic 不受影響（符合規格，它擋的是合成、不是真字形）。
+>
+> 原測怎麼做的沒留下紀錄，但重測時**第一版也跑出「無效」的假結果**：字體堆疊裡 `"Times New Roman"` 的雙引號提前關掉了 `style="..."` 屬性，整格樣式靜默失效，連 Latin 對照組都沒生效。那個假結果因為**符合已經寫在這份文件裡的結論**而格外可信，是對照組報警才擋下來的。教訓有兩條：CSS fixture 一律寫在 `<style>` 裡別用 inline 屬性；任何「實測證實了我們原本的說法」的結果，先確認對照組有沒有鑑別力。
+>
+> 影響：自動防呆是存在的，但它**不改 computed `font-style`**，所以不能拿來取代顯式寫對——保險絲是防呆網，不是許可證。版面健檢的 CJK 檢查因此補了第二道判準（computed `font-synthesis` 不含 `style` 就跳過），否則用保險絲修好的頁面會被誤報成有斜體。
 
 → 版面健檢（同一支腳本，它已在真渲染）加 CJK 斜體檢查：computed `font-style` 非 normal、且元素**自身的直接文字節點**含中文就報 `✗`。只看直接文字節點是為了避免「父層 italic + 子層西文」的誤報。CSS 可能來自任何一層選擇器，靜態 grep 抓不到。
 

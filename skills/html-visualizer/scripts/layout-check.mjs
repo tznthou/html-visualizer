@@ -228,12 +228,22 @@ function probe() {
   }
 
   // 中文被套斜體（0911 回歸：中文沒有 italic 字形，瀏覽器只能把正體字整個幾何傾斜，
-  // 筆畫變形、重心歪。font-synthesis-style:none 對 CJK fallback 字體無效，擋不掉，
-  // 所以只能在這裡抓。只看元素自身的直接文字節點，避免「父層 italic + 子層西文」誤報）
+  // 筆畫變形、重心歪。只看元素自身的直接文字節點，避免「父層 italic + 子層西文」誤報）
+  //
+  // font-synthesis 是第二道判準，不是裝飾。它管「瀏覽器要不要合成」，不改 font-style
+  // 的宣告值——所以 computed 讀到 italic、畫出來卻是正體的頁面是存在的。
+  // 2026-09-23 逐像素實測（serif fallback／sans fallback／明指 PingFang TC 三條路徑，
+  // 屬性寫在元素上或設在 body 靠繼承都測）：加上 font-synthesis: none 之後，CJK italic
+  // 的 bitmap 與 normal 完全相同，Latin 的真 italic 則不受影響。少了這道判準，用保險絲
+  // 修好的頁面會被誤報成有斜體。
   const CJK = /[㐀-䶿一-鿿豈-﫿]/;
+  const SYNTH_STYLE = /\bstyle\b/;
   const cjkItalic = [];
   for (const el of document.querySelectorAll("*")) {
-    if (getComputedStyle(el).fontStyle === "normal") continue;
+    const cs = getComputedStyle(el);
+    if (cs.fontStyle === "normal") continue;
+    // 讀不到屬性時當成「會合成」繼續驗：這個檢查寧可誤報也不要漏報
+    if (!SYNTH_STYLE.test(cs.fontSynthesis || "weight style small-caps")) continue;
     const own = Array.from(el.childNodes)
       .filter((n) => n.nodeType === 3)
       .map((n) => n.textContent)

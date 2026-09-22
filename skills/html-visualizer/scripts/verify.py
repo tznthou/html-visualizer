@@ -178,7 +178,8 @@ def check_layout(path):
     存在理由：跑版不在標記裡——同一份 HTML 在 390px 整片凸出、在 1440px 好好的。
     靜態掃 class 名稱猜不到，只有量出來的座標算數。
     同一支腳本順便抓中文被套斜體：那要 computed style 才看得出來（CSS 可能來自
-    任何一層選擇器），而且 font-synthesis-style:none 對 CJK fallback 無效、擋不掉。
+    任何一層選擇器）。檢查同時看 font-synthesis——設了 none 的頁面渲染出來是正體
+    （2026-09-23 逐像素實測），只讀 font-style 會把它們誤報成有斜體。
     """
     script = os.path.join(os.path.dirname(os.path.abspath(__file__)), "layout-check.mjs")
     if not shutil.which("node") or not os.path.exists(script):
