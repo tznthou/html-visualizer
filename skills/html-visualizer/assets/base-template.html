@@ -125,7 +125,10 @@
         height: 1.5px;
         background: var(--clay);
       }
-      h1 {
+      /* ⚠️ 選擇器要比 Tailwind preflight 高一級。它的 reset 把 h1 的 font-size
+         與 font-weight 設成 inherit，而它的樣式是 JS 動態注入、排在本區塊之後，
+         同優先級下會蓋過來——裸 `h1` 選擇器的字級會整個失效退回 16px。 */
+      body h1 {
         font-family: var(--serif);
         font-weight: 500;
         font-size: clamp(38px, 5.4vw, 62px);

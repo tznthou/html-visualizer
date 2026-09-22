@@ -18,6 +18,10 @@
          margin 全部回來，實測整頁高度多出 4414px、區塊間距全走樣。 */
       *,::before,::after{box-sizing:border-box}
       body{margin:0;line-height:inherit}
+      /* ⚠️ 下一行的 font-size:inherit 是照抄 preflight、刻意保留的：本檔是 utility-first，
+         標題字級一律由 class 或 inline style 給（見 h1,h2,h3,h4 規則沒有 font-size）。
+         拿掉它會讓 CDN 在場與不在場的字級分岔，比現在更糟。代價是裸 <h1> 會是 16px——
+         新增標題記得自己帶字級。語意化 CSS 的範本（base-template）走的是相反路線。 */
       h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit;margin:0}
       p,blockquote,dl,dd,figure,pre,hr{margin:0}
       ol,ul,menu{list-style:none;margin:0;padding:0}
