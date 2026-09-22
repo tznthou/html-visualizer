@@ -189,8 +189,11 @@ def check_layout(path):
                            capture_output=True, text=True, timeout=180)
     except subprocess.TimeoutExpired:
         return "skip", ["渲染逾時"]
-    if r.returncode == 2 or "NO_PLAYWRIGHT" in r.stderr:
-        return "skip", ["找不到 playwright／chromium"]
+    if r.returncode == 2 or "NO_PLAYWRIGHT" in r.stderr or "NO_BROWSER" in r.stderr:
+        why = ("找不到 playwright 套件（可設 HTML_VISUALIZER_PLAYWRIGHT_ROOT 指定安裝位置）"
+               if "NO_PLAYWRIGHT" in r.stderr
+               else "playwright 自帶 chromium 與系統 Chrome 都起不來")
+        return "skip", [why]
     lines = [ln for ln in r.stdout.splitlines() if ln.strip()]
     return ("bad" if r.returncode == 1 else "ok"), lines
 
@@ -210,8 +213,11 @@ def check_runtime(path):
                            capture_output=True, text=True, timeout=120)
     except subprocess.TimeoutExpired:
         return "skip", ["執行逾時"]
-    if r.returncode == 2 or "NO_PLAYWRIGHT" in r.stderr:
-        return "skip", ["找不到 playwright／chromium"]
+    if r.returncode == 2 or "NO_PLAYWRIGHT" in r.stderr or "NO_BROWSER" in r.stderr:
+        why = ("找不到 playwright 套件（可設 HTML_VISUALIZER_PLAYWRIGHT_ROOT 指定安裝位置）"
+               if "NO_PLAYWRIGHT" in r.stderr
+               else "playwright 自帶 chromium 與系統 Chrome 都起不來")
+        return "skip", [why]
     lines = [ln for ln in r.stdout.splitlines() if ln.strip()]
     return ("bad" if r.returncode == 1 else "ok"), lines
 
@@ -501,10 +507,19 @@ def main(path):
            'class="def-card', "highlight-box", 'class="myth', "choice", "metric",
            "tree-node", "flow-stage", "timeline", "termbox", "filerow", "pg-strip", "axis-item",
            'class="bound', 'class="tokrow', "commit-box", "qa-step", "mock-table", "adr-table",
-           'class="figure', "<svg"]
+           'class="figure', "<svg", "<pre"]
+    # 寫死的名單追不上自訂樣式名 —— 2026-09-20 一天內把 6 個有卡片結構的段落誤判成
+    # 純文字（verdict-card / open-list / persona-grid / rec-list / plan…）。補一條形態
+    # 判斷：樣式名以常見結構後綴結尾的，一律算視覺元件。
+    STRUCT = re.compile(
+        r'class="[^"]*\b[a-z][a-z0-9-]*-'
+        r'(card|cards|grid|list|row|rows|box|panel|pane|step|steps|table|chart|bar|bars'
+        r'|tile|tiles|strip|cell|col|cols|fig|figure|mock|badge|tag|matrix|track|lane)\b'
+    )
     plain = []
     for m in re.finditer(r'<section id="([^"]+)"(.*?)</section>', h, re.S):
-        if not any(v in m.group(2) for v in VIS):
+        body_ = m.group(2)
+        if not any(v in body_ for v in VIS) and not STRUCT.search(body_):
             plain.append(m.group(1))
     # assets/ 下的起手骨架只有佔位段落，不適用此檢查
     if "/assets/" in os.path.abspath(path):
@@ -512,6 +527,29 @@ def main(path):
     else:
         report(OK if not plain else BAD, "每段都有視覺元件",
                "" if not plain else f"純文字段落：{plain}")
+
+    # 視覺手法重複（軟規則、只報數不擋）—— 取自 taste-skill §4.7：每段都放一條
+    # 大寫寬字距小標，會產生同樣的模板化節奏。判準用它給的 CSS 特徵（同一條規則裡
+    # 同時有 uppercase 與 letter-spacing），不是靠樣式名猜。
+    style_txt = h[h.find("<style"):h.rfind("</style>")] if "<style" in h else ""
+    eb_classes = {
+        m.group(1)
+        for m in re.finditer(r"\.([a-z][a-z0-9-]*)\s*\{([^}]*)\}", style_txt)
+        if "uppercase" in m.group(2) and "letter-spacing" in m.group(2)
+    }
+    body_txt = h[h.find("<body"):]
+    eb_uses = sum(
+        len(re.findall(r'class="[^"]*\b' + re.escape(c) + r'\b', body_txt))
+        for c in eb_classes
+    )
+    sec_n = len(re.findall(r"<section[ >]", h))
+    cap = max(1, sec_n // 3)
+    if not eb_classes:
+        report(SKIP, "大寫寬字距小標", "沒有這種樣式")
+    else:
+        report(OK if eb_uses <= cap else WARN,
+               f"大寫寬字距小標 {eb_uses} 個",
+               "" if eb_uses <= cap else f"建議上限 {cap}（每 3 段 1 個）· 軟規則不擋")
 
     words = load_mixed_words()
     text = visible_text(h)

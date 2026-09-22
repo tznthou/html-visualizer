@@ -4,7 +4,7 @@
 
 風格靈感來源：[HTML 風格參考](https://thariqs.github.io/html-effectiveness/) — **僅參考風格、未複製內容**。
 
-頁面以 ivory 底色、clay accent、serif 標題與 italic 強調呈現編輯式閱讀感。Markup、樣式與文案重新撰寫，不含來源網站的原始內容或頁面結構。
+頁面以 ivory 底色、clay accent、serif 標題與換字重強調呈現編輯式閱讀感（中文沒有斜體，強調改用字重）。Markup、樣式與文案重新撰寫，不含來源網站的原始內容或頁面結構。
 
 樣張包含 masthead、eyebrow、一張連至訂閱規格的 link card、知識庫情境 highlight box、可展開的風格說明、footer，以及固定的示範 session 識別。
 

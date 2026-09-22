@@ -4,6 +4,12 @@
 
 **Gets your AI to turn long answers into a readable web page instead of a wall of text.**
 
+![Left: an AI reply in the terminal, a wall of markdown text. Right: the same content as a web page with a sidebar, key-number cards, and decision cards you can tick directly](docs/images/hero-en.webp)
+
+Same question. On the left, what you get today; on the right, what you get with this installed. *(The samples are in Chinese — generated pages follow the language you chat in.)*
+
+[See what it looks like](#what-it-looks-like) · [Install](#install) · [Common questions](#common-questions)
+
 ---
 
 ## What it fixes
@@ -16,7 +22,19 @@ With this installed, the same question gets you a web page: jump around with a t
 
 ---
 
-## What that looks like
+## What it looks like
+
+### When you need to decide: pick on the page, paste back in one click
+
+![On a decision page: switching the first question from "approve" to "overturn", typing a reason in the note box, clicking "Copy decision summary", then "Preview" to show the tidy summary that gets pasted back to the AI](docs/images/demo-decide.webp)
+
+Each thing the AI needs you to decide sits right next to its explanation, with the options and a note box on the same card. Pick, click "Copy decision summary", paste it back, and the AI carries on with your calls. No more typing "for #1 go with A, for #2 I'd rather…".
+
+### Different content, different layouts
+
+![Four page types: an explainer, a flowchart, data charts, and a report, each laid out differently](docs/images/gallery-en.webp)
+
+It picks a layout to fit the content instead of stamping the same template every time:
 
 | You say | You get |
 |---|---|
@@ -26,6 +44,16 @@ With this installed, the same question gets you a web page: jump around with a t
 | "Put this plan in front of my boss" | A page for non-technical readers: top-down, with screen mockups, and the confusing technical bits hidden |
 | "What's the trend in these numbers?" | A chart, not a pile of numbers |
 | "Draw this process for me" | A flow diagram, with branches, handoffs and loops back |
+
+### Send it to a colleague — it reads fine on a phone
+
+![Three phones showing an explainer, a decision page and a chart page, with text and cards using the full screen width](docs/images/mobile.webp)
+
+The output is a single HTML file you open in any browser. On a phone it drops the desktop margins so the width goes to the content.
+
+### It checks its own work before you see it
+
+Before handing you a page it opens it in a real browser at phone, tablet and desktop widths and confirms nothing spills off the screen, no text gets squeezed, and the buttons actually respond. Details are under *Technical detail* below.
 
 ---
 
@@ -52,6 +80,18 @@ Works with Claude Code, Codex, Cursor, Cline, GitHub Copilot, OpenCode and other
 ```
 
 Check with `/plugin list`. Update with `/plugin update html-visualizer@chenjackle45`, remove with `/plugin uninstall html-visualizer@chenjackle45`.
+
+**claude.ai (web) / Claude Cowork** doesn't take plugins — upload each skill as a zip (Settings → Capabilities → Skills). The skill folder itself must be the zip root, one zip per skill:
+
+```
+git clone https://github.com/chenjackle45/html-visualizer.git
+cd html-visualizer/skills
+zip -r html-visualizer.zip html-visualizer
+zip -r chart.zip chart
+zip -r diagram-design.zip diagram-design
+```
+
+Upload the three zips separately. The web upload has two limits the docs don't spell out: `description` max 200 characters (the Agent Skills spec says 1024) and max 200 files per zip. All three here stay under both. If you edit a description, run `python3 tests/check-frontmatter.py` before uploading.
 
 **Everything else** — clone it and run the installer:
 
@@ -103,7 +143,7 @@ Restart, or tell it to reload its skills.
 Short answers deliberately don't trigger it — you don't want a web page for a one-liner. Just say "make this a web page" if you want one.
 
 **A check says "unverified" — is something broken?**
-No. Before showing you a page it checks the layout isn't broken, and that step needs an extra browser tool. Without it the check says "unverified", meaning "not checked" — not "something's wrong". To install it: `npm i -D playwright && npx playwright install chromium`.
+No. Before showing you a page it checks the layout isn't broken, and that step needs the browser automation tool Playwright. Without it the check says "unverified", meaning "not checked" — not "something's wrong". If you have Chrome installed, `npm i -D playwright` is enough — it borrows your Chrome. Without Chrome, also run `npx playwright install chromium`.
 
 ---
 
@@ -120,9 +160,11 @@ Three skills working together:
 
 **Why not just ask the AI for HTML**: because AI-generated HTML fails silently, and the AI can't see it. So a self-check runs before the page reaches you. Every item maps to a real incident:
 
+![Self-check output: structure, scripts, styles, layout and presentation each ticked off, ending with "0 failed → ok to open"](docs/images/selfcheck.webp)
+
 | Check | The incident it prevents |
 |---|---|
-| Syntax-check every script, confirm the elements it reaches for exist | A copy button that did nothing at all, because one newline character broke the whole script |
+| Syntax-check every script, then actually open the page and click the copy button | A copy button that did nothing at all. Once a single newline broke the whole script; once a missing section left the code tripping over an empty value |
 | Parse every stylesheet, catch stray or unterminated braces | A page with no styling whatsoever, because the CSS was cut mid-rule. Braces had been counted and matched exactly, so nothing looked wrong |
 | Render at phone, tablet and desktop widths in a real browser | The same page looks fine on a desktop and spills off a phone |
 | Four invisible failures: text squeezed into a vertical strip, elements flattened, contrast too low, content hidden behind something | A report passed every check, then came back with the text rendered one character per line |

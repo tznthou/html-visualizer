@@ -6,9 +6,9 @@
   <title>Brewly · 每月一份咖啡提案</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23d97757'/%3E%3Ctext x='32' y='45' text-anchor='middle' font-size='42' fill='white'%3EB%3C/text%3E%3C/svg%3E">
   <style>
-    /* 內文的 <em>：覆蓋瀏覽器預設的 italic。中文沒有 italic 字形，
-       UA 預設的 em 會讓中文被幾何傾斜——範本沒定義就等於預設生效。 */
-    em { font-style: normal; font-weight: 600; color: var(--clay); }
+    /* 內文的 <em>：保險絲擋掉合成斜體後中文強調會消失，補字重讓它看得出來。
+       font-style: normal 是本庫偏離上游之處——中英文一律不斜，不讓英文保留斜體。 */
+    em { font-style: normal; font-weight: 600; }
 
     :root {
       --ivory: #faf9f5;
@@ -25,6 +25,7 @@
       box-sizing: border-box;
     }
     body {
+      font-synthesis: none;
       margin: 0;
       background: var(--ivory);
       color: var(--ink);
@@ -71,10 +72,11 @@
       margin-block: 24px;
       font-size: clamp(38px, 6vw, 66px);
     }
+    /* 中文強調不用斜體——漢字沒有義大利體，瀏覽器只能機械傾斜、筆畫變形。改用換字重。 */
     h1 em {
       color: var(--clay);
       font-style: normal;
-      font-weight: 600;
+      font-weight: 700;
     }
     .sample-intro {
       max-width: 54ch;

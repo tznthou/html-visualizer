@@ -12,7 +12,7 @@
 
 ### Anthropic-signature 元件（首選）
 - [Eyebrow（mono + clay 短線 metadata）](#eyebrowmono--clay-短線-metadata)
-- [Hero h1 with italic emphasis](#hero-h1-with-italic-emphasis)
+- [Hero h1 with emphasis](#hero-h1-with-emphasis)
 - [Section head 三件組（idx + h2 + count）](#section-head-三件組idx--h2--count)
 - [TOC pills（圓角 nav）](#toc-pills圓角-nav)
 - [Link card with thumbnail](#link-card-with-thumbnail)
@@ -101,9 +101,9 @@
 
 → 短線是 visual signature、不要拿掉。
 
-## Hero h1 with italic emphasis
+## Hero h1 with emphasis
 
-**何時用**：Hero / 首頁主標題、用 italic em 標重點詞。
+**何時用**：Hero / 首頁主標題、標 1-2 個重點詞。
 
 ```css
 h1 {
@@ -116,17 +116,26 @@ h1 {
   max-width: 17ch;
   color: var(--slate);
 }
+/* B · 換字重（預設）。🔴 中文不要用 font-style: italic —— 漢字沒有義大利體，
+   瀏覽器只能機械傾斜、筆畫變形。完整規則與三種手法見 color-and-typography.md */
 h1 em {
-  font-style: italic;
+  font-style: normal;
+  font-weight: 700;
   color: var(--clay);
+}
+/* C · 螢光筆（語氣更重、一頁最多一兩次） */
+.hl {
+  background: linear-gradient(transparent 58%, #f7d9a0 58%);
 }
 ```
 
 ```html
-<h1>The unreasonable <em>effectiveness</em> of HTML</h1>
+<h1>造工廠，還是寫<em>配方</em>？</h1>
+<h1>能用，但大半<span class="hl">不該</span>從這裡拿</h1>
 ```
 
-→ Italic 不是裝飾、是 strong emphasis。挑 1-2 個關鍵詞、不要全部都 italic。
+→ 強調不是裝飾、是 strong emphasis。挑 1-2 個關鍵詞、不要整句都標。
+→ **英文標題不受此限**（英文有真正的義大利體）：`<h1>The unreasonable <em>effectiveness</em> of HTML</h1>` 維持斜體是對的。
 
 ## Section head 三件組（idx + h2 + count）
 
@@ -1192,7 +1201,8 @@ lines.push(`- F-1 自動化規則語意：${getValue("f-1")}${getComment("f-1")}
   line-height: 1.6;
 }
 .def-oneliner em {
-  font-style: italic;
+  font-style: normal;
+  font-weight: 700;
   color: var(--clay-d);
 }
 .def-detail {
@@ -1241,7 +1251,8 @@ lines.push(`- F-1 自動化規則語意：${getValue("f-1")}${getComment("f-1")}
   margin-bottom: 14px;
 }
 .analogy-head em {
-  font-style: italic;
+  font-style: normal;
+  font-weight: 700;
   font-weight: 500;
 }
 .analogy-row {

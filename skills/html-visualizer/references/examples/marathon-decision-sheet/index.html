@@ -29,9 +29,6 @@
       button{background-color:transparent;background-image:none;text-transform:none}
       img,svg,video,canvas{display:block;vertical-align:middle;max-width:100%;height:auto}
       a{color:inherit;text-decoration:inherit}
-      /* 內文的 <em>：覆蓋瀏覽器預設的 italic（preflight 不含 em）。中文沒有
-         italic 字形，UA 預設會讓中文被幾何傾斜——範本沒定義就等於預設生效。 */
-      em{font-style:normal;font-weight:600;color:var(--clay)}
 
       .flex{display:flex} .grid{display:grid} .hidden{display:none} .sticky{position:sticky}
       .flex-wrap{flex-wrap:wrap}
@@ -144,6 +141,7 @@
         font-size: 16px;
         line-height: 1.6;
         -webkit-font-smoothing: antialiased;
+        font-synthesis: none;
       }
       h1,
       h2,
@@ -155,11 +153,37 @@
         letter-spacing: -0.012em;
         margin: 0;
       }
+      /* 中文強調不用斜體 —— 漢字沒有義大利體，瀏覽器只能機械傾斜、筆畫變形。
+         B 換字重（此處）／ C 螢光筆（.hl）／ E 保險絲（body font-synthesis）。
+         完整規則見 references/color-and-typography.md */
+      p,
+      li,
+      td {
+        text-wrap: pretty;
+      }
+      h1,
+      h2,
+      h3 {
+        text-wrap: balance;
+      }
       h1 em,
-      h2 em {
+      h2 em,
+      h3 em {
+        font-style: normal;
+        font-weight: 700;
+        color: var(--clay);
+      }
+      .hl {
+        background: linear-gradient(transparent 58%, #f7d9a0 58%);
+        font-style: normal;
+      }
+      /* 內文的 <em>：保險絲擋掉合成斜體後，中文 em 會跟正文一模一樣（強調消失），
+         補字重讓它看得出來。`font-style: normal` 是本庫刻意偏離上游的一處：英文
+         字體有真的義大利體，上游讓英文 em 保留斜體，這裡改成中英文一律不斜。
+         （標題的 em 另有 700 ＋ clay，選擇器較具體、不受這條影響） */
+      em {
         font-style: normal;
         font-weight: 600;
-        color: var(--clay);
       }
 
       /* eyebrow */
@@ -1084,7 +1108,21 @@
         .items-baseline { flex-wrap: wrap; }
         strong { overflow-wrap: anywhere; }
       }
-</style>
+      /* ── 手機：收掉桌機的水平留白 ─────────────────
+         版面用 Tailwind utility 寫的（外層 px-8、卡片 p-8/p-7），390px 上左右
+         共吃掉約 150px。這裡用比 utility 高一級的選擇器蓋過去，不用 !important。 */
+      @media (max-width: 640px) {
+        body > div[class*="94vw"] {
+          width: 100%;
+          padding-left: 14px;
+          padding-right: 14px;
+        }
+        body .card {
+          padding-left: 16px;
+          padding-right: 16px;
+        }
+      }
+    </style>
   </head>
   <body>
     <!-- ════════ Top Header ════════ -->

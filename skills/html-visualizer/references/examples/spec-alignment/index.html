@@ -29,6 +29,7 @@
     margin: 0;
     line-height: 1.7;
     -webkit-font-smoothing: antialiased;
+    font-synthesis: none;
   }
   .serif {
     font-family:
@@ -41,11 +42,6 @@
   }
   .prose {
     max-width: 74ch;
-  }
-  em {
-    font-style: normal;
-    font-weight: 600;
-    color: var(--clay);
   }
   .chip {
     display: inline-flex;
@@ -241,7 +237,13 @@
         .items-baseline { flex-wrap: wrap; }
         strong { overflow-wrap: anywhere; }
       }
-</style>
+      /* 內文 <em>：保險絲擋掉合成斜體後中文強調會消失，補字重讓它看得出來。
+         font-style: normal 是本庫偏離上游之處——中英文一律不斜，不讓英文保留斜體。 */
+      em {
+        font-style: normal;
+        font-weight: 600;
+      }
+    </style>
 
 <div class="wrap" style="padding-top: 2.8rem; padding-bottom: 5rem">
   <!-- HERO -->

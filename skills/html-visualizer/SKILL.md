@@ -1,6 +1,6 @@
 ---
 name: html-visualizer
-description: 把長文件 / 報告 / 規格 / 設計決策（ADR）/ 架構說明 / 研究結論 / PR review / 教學 / 儀表板 / 互動式探索界面 / 決策追認 / marathon 收尾簡報 / prototype 預設用 HTML 而非 Markdown 呈現給人類看。觸發場景包含但不限於：使用者說「整理成文件 / 做一份報告 / 給我份視覺化 / 圖像化呈現 / 給人看的版本 / 報告我老闆 / 做個 dashboard / review 用 / 教我這個概念 / 做個解釋 / 寫個 spec 給我看 / 給我幾個選項拍板 / 列待確認的決策 / marathon 結束追認 / sprint 收尾 / 我醒了回報狀況」、或內容超過 50 行 markdown、或累積 2+ 條待使用者拍板的選項、或內容適合用對比圖 / 流程圖 / 表格 / 卡片視覺化呈現時。即使使用者沒明說 HTML、只要情境是給人類閱讀的長文件 / 視覺化內容 / 含拍板選項的決策追認、應主動使用此 skill。精神是「人類看 HTML、AI 看 Markdown」— AI 思考 / 規劃 / Inter-agent 溝通用 Markdown、最終給人類看的長文件用 HTML。
+description: 把長文件、報告、規格、設計決策、架構說明、教學、儀表板、待拍板選項預設做成 HTML 而非 Markdown 給人看。使用者說「整理成文件／做份報告／視覺化／給我看的版本／給老闆看／教我這個／列選項讓我選」、內容超過 50 行、或適合用表格／流程圖／對比圖呈現時主動使用。精神：人類看 HTML、AI 看 Markdown。
 ---
 
 # HTML Visualizer
@@ -17,7 +17,7 @@ description: 把長文件 / 報告 / 規格 / 設計決策（ADR）/ 架構說�
 
 ## 預設視覺風格：Anthropic / Claude 官方品牌風
 
-預設用 **Anthropic 風格**（ivory 米白底 + clay 赤陶 accent + serif 標題 + clay 色強調 + warm gray）— editorial / book / magazine 質感、跟 Claude 官方品牌一致。
+預設用 **Anthropic 風格**（ivory 米白底 + clay 赤陶 accent + serif 標題 + 換字重強調 + warm gray）— editorial / book / magazine 質感、跟 Claude 官方品牌一致。
 
 完整 design tokens 見 `references/color-and-typography.md`、Anthropic-signature 元件見 `references/component-library.md` § 首段。Reference 範本見 `references/examples/anthropic-gallery/index.html`。
 
@@ -41,6 +41,8 @@ description: 把長文件 / 報告 / 規格 / 設計決策（ADR）/ 架構說�
 | 決策追認表 / 詢問選項 | 「列出選項讓我選」 |
 | ⭐ **UX audit / 設計提案 / 視覺改版** | 「審視這個頁面 UX」/「給我改版建議」/「體檢一下這個畫面」 |
 | ⭐ **對比型 review（現況 vs 建議）** | 「列出有問題的地方 + 怎麼改」/「audit 報告」/「設計 review」 |
+| 決策追認 / marathon 收尾 / sprint 收尾 | 「列待確認的決策」/「marathon 結束追認」/「我醒了回報狀況」 |
+| PR review / 儀表板 / prototype | 「review 用」/「做個 dashboard」/「做個解釋」 |
 | 長 markdown（超過 50 行） | 任何長文件。50 行約等於終端機兩個畫面——超過就得反覆捲動才能前後對照，HTML 的結構化排版才開始划算。覺得太鬆或太緊，直接改這個數字 |
 
 預設用 Markdown / 純文字（**不**用此 skill）：
@@ -227,7 +229,7 @@ description: 把長文件 / 報告 / 規格 / 設計決策（ADR）/ 架構說�
 | Code path / 行號 / 函式名 / 變數名 當主要內容 | 對非技術受眾維持：用邏輯描述、必要時 monospace 註腳。⭐ **開發者受眾的程式解說頁例外**（2026-08-29 拍板）：函式名 / 元件名就是內容本身、檔案路徑降級為灰字註腳（code-shape 元件的做法）|
 | 程式碼路徑形式的清單（如 `packages/x/y/z.ts:34`）出現在 hero 或主視覺 | 影響快速瀏覽；改寫成自然語言 |
 | 深淺色切換（除非使用者明確要求）| 預設淺色 only、減少 CSS 複雜度與 dark mode 適配 bug |
-| ⭐⭐ 對中文套斜體（`font-style: italic` / `<i>` / 會命中中文的 `em` 選擇器）| 中文沒有 italic 字形，瀏覽器只能把正體字整個幾何傾斜（synthetic oblique），筆畫變形、重心歪。強調改用 clay 色 + `font-weight: 600`；真要斜體的純西文片段在該處單獨寫，不要放進全域選擇器。另外在 `body` 加一道 `font-synthesis: none` 保險絲（09-23 實測：寫錯了也會逐像素退回正體，西文真 italic 不受影響）——但它不改 computed `font-style`，是防呆網不是許可證，選擇器還是要寫對。`verify.py` 會抓（CJK-italic 檢查），來龍去脈見 `references/incidents.md` 2026-09-11 |
+| ⭐⭐ 對中文套斜體（`font-style: italic` / `<i>` / 會命中中文的 `em` 選擇器）| 中文沒有 italic 字形，瀏覽器只能把正體字整個幾何傾斜（synthetic oblique），筆畫變形、重心歪。強調改用換字重：標題 em 是 `font-weight: 700` ＋ clay 色，內文 em 是 `font-style: normal` ＋ `font-weight: 600`（不上 clay，留住兩層強調的層次差）。另外在 `body` 加一道 `font-synthesis: none` 保險絲（09-23 實測：寫錯了也會逐像素退回正體，西文真 italic 不受影響）——但它不改 computed `font-style`，是防呆網不是許可證，選擇器還是要寫對。`verify.py` 會抓（CJK-italic 檢查），來龍去脈見 `references/incidents.md` 2026-09-11 |
 | 字數爆炸的長段落 | 改用卡片 / 表格 / 視覺化；段落超過 4 行考慮拆 |
 | ⭐ 整段只有純文字、沒有任何視覺元件 | 能畫的東西寫成文字＝要 user 自己在腦裡還原。每段都先問「這段能不能用畫的」（說明與描述盡量圖像化）|
 | ⭐⭐ 把拍板題全部堆到文件尾段、跟它的背景說明分開 | 讀者拍板時找不到回去的路，於是每張決策卡只好重述背景 → 同件事講兩次。有背景的題就地放在該段末尾，尾段只留不需背景的程序題 |

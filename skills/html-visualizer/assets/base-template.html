@@ -6,10 +6,6 @@
     <title>__TITLE__</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-      /* 內文的 <em>：覆蓋瀏覽器預設的 italic。中文沒有 italic 字形，
-         UA 預設的 em 會讓中文被幾何傾斜——範本沒定義就等於預設生效。 */
-      em { font-style: normal; font-weight: 600; color: var(--clay); }
-
       /* ════════════════════════════════════════════ */
       /* Anthropic / Claude 官方品牌風 design tokens     */
       /* ════════════════════════════════════════════ */
@@ -83,6 +79,9 @@
         font-size: 16px;
         line-height: 1.55;
         -webkit-font-smoothing: antialiased;
+        /* 保險絲：擋掉合成斜體與合成粗體。中文字體沒有義大利體與部分字重，
+           瀏覽器會機械傾斜／加粗漢字，筆畫變形。寧可不強調也不要變形字。 */
+        font-synthesis: none;
       }
 
       /* ════════════════════════════════════════════ */
@@ -98,6 +97,18 @@
       p.prose,
       .body-text {
         max-width: 72ch;
+      }
+      /* 排印細節：pretty 讓段落尾行不留孤字、balance 讓多行標題長度接近。
+         現代瀏覽器都支援，成本為零。 */
+      p,
+      li,
+      td {
+        text-wrap: pretty;
+      }
+      h1,
+      h2,
+      h3 {
+        text-wrap: balance;
       }
 
       /* ════════════════════════════════════════════ */
@@ -138,10 +149,28 @@
         max-width: 17ch;
         color: var(--slate);
       }
-      h1 em {
+      /* 中文標題強調 — 不要用斜體（漢字沒有斜體傳統，見上方 font-synthesis 註解）。
+         兩種手法依語氣選：B 換字重（預設、安靜）／ C 螢光筆（重、一頁最多一兩次）。 */
+      h1 em,
+      h2 em,
+      h3 em {
+        font-style: normal;
+        font-weight: 700;
+        color: var(--clay);
+      }
+      .hl {
+        background: linear-gradient(transparent 58%, #f7d9a0 58%);
+        font-style: normal;
+      }
+      /* 內文的 <em>：保險絲擋掉合成斜體後，中文 em 會跟正文一模一樣（強調消失），
+         補字重讓它看得出來。
+         `font-style: normal` 是本庫刻意偏離上游的一處：英文字體有真的義大利體，
+         上游讓英文 em 保留斜體，這裡改成中英文一律不斜——產出以中文為主、常中英
+         混排，同一句裡英文斜、中文不斜會看得出接縫。
+         （標題的 em 另有 700 ＋ clay，選擇器較具體、不受這條影響） */
+      em {
         font-style: normal;
         font-weight: 600;
-        color: var(--clay);
       }
       .intro {
         font-size: 16.5px;
@@ -238,9 +267,44 @@
         max-width: 700px;
         margin: 0 0 24px 50px;
       }
-      @media (max-width: 640px) {
+      /* ── 窄螢幕溢出防護 ─────────────────────────
+         grid／flex 子項的 min-width 預設是 auto，裡面放 pre 或 table 會被內容
+         撐開 → 整頁橫向溢出。自訂 grid 容器時對子項加 min-width: 0，
+         或直接用 .grid-safe。（跑版不在標記裡，一定要用版面健檢量。） */
+      .grid-safe > * {
+        min-width: 0;
+      }
+      pre,
+      table {
+        max-width: 100%;
+      }
+      pre {
+        overflow-x: auto;
+      }
+
+      @media (max-width: 900px) {
         .sec-intro {
           margin-left: 0;
+        }
+        /* 區段內容的 50px 視覺軸縮排在手機上是純浪費 */
+        div[style*="margin-left: 50px"] {
+          margin-left: 0 !important;
+        }
+        /* 長指令改換行而非橫捲：手機上捲軸比斷行難用 */
+        pre {
+          white-space: pre-wrap;
+          word-break: break-word;
+          font-size: 11px;
+        }
+        /* 固定佈局讓表格文字換行，不把版面撐破 */
+        table {
+          table-layout: fixed;
+          width: 100%;
+        }
+        table th,
+        table td {
+          word-break: break-word;
+          overflow-wrap: anywhere;
         }
       }
 
@@ -408,6 +472,25 @@
         text-decoration-color: var(--oat);
         text-underline-offset: 3px;
       }
+          /* ── 手機：收掉桌機的水平留白 ─────────────────
+         390px 螢幕上，容器 32px ＋ 卡片 24px 的左右內距吃掉 112px，加上 94vw
+         的寬度限制，文字只剩七成八。桌機上那是呼吸空間，手機上是純損失。
+         （2026-09-21 實測：清單項在 390px 只剩 218px 寬。）*/
+      @media (max-width: 640px) {
+        .wrap {
+          width: 100%;
+          padding-left: 14px;
+          padding-right: 14px;
+        }
+        .card {
+          padding-left: 16px;
+          padding-right: 16px;
+        }
+        ul,
+        ol {
+          padding-left: 20px;
+        }
+      }
     </style>
   </head>
   <body>
@@ -417,7 +500,7 @@
       <!-- ════════════════════════════════════════════ -->
       <header class="masthead">
         <div class="eyebrow">__SUBTITLE__ · __DATE__</div>
-        <h1>__TITLE__ · with <em>highlighted</em> emphasis</h1>
+        <h1>__TITLE__ · 強調用<em>換字重</em>或<span class="hl">螢光筆</span></h1>
         <p class="intro">
           副說明：一段 1-3 句的概述文字、講清楚這份文件要解決什麼。 強調用
           <a href="#">連結色</a> 或 <code>code 標記</code>。

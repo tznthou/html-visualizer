@@ -97,7 +97,7 @@
 - **底色 ivory `#FAF9F5`**、不用純白
 - **主 accent clay `#D97757`** — 連結 / radio 選中 / section index border / hover
 - **Section index 用 mono 兩位數**（`01` / `02`；字母 `A`-`G` 只給尾段程序快答的題號），帶 1.5px clay 邊
-- **Hero h1 含 italic em 強調**（`<em>` + clay 色）
+- **Hero h1 含 em 強調**（`<em>` + clay 色、換字重不用斜體 —— 中文沒有義大利體，見 `color-and-typography.md`）
 - **Eyebrow 用 mono uppercase + 24px clay 短線**
 - **Status semantic 對齊 warm palette**：
   - 成功 / 已做 → olive `#788C5D`（不用 emerald）

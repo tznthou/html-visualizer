@@ -16,7 +16,7 @@
   --slate:  #141413;   /* 主要文字 / 標題 */
 
   /* ── Anthropic 招牌色 ──────────── */
-  --clay:   #D97757;   /* 主 accent — 連結 / 強調 / hover */
+  --clay:   #D97757;   /* 主 accent — 連結 / 強調（換字重）/ hover */
   --clay-d: #B85C3E;   /* 深 clay — 主要 CTA */
   --oat:    #E3DACC;   /* 燕麥 — hover bg / 裝飾 */
   --olive:  #788C5D;   /* 橄欖綠 — 次強調 / 成功 / 採納 */
@@ -58,7 +58,7 @@
 | 主要文字 | `--slate` | h1 h2 標題、主要文字 |
 | 次要文字 | `--g700` | 內文、副說明 |
 | 弱化文字 | `--g500` | metadata / mono label / 註腳 |
-| 主 accent | `--clay` | h1 強調（色 + 字重、不用斜體）、連結、section index、hover |
+| 主 accent | `--clay` | h1 強調（換字重、不用斜體）、連結、section index、hover |
 | Hover 區塊底 | `--oat` | card thumbnail hover、輕微 emphasis |
 | 次 accent | `--olive` | 圖示分色、次強調、成功 |
 | 邊線 | `--g300` | 1.5px 細邊（不是 1px、不是 2px）|
@@ -98,7 +98,7 @@
 
 ## 字體規則（最重要的差異）
 
-### 標題用 serif + clay 色強調（不用斜體）
+### 標題用 serif，但強調不用斜體
 
 ```css
 h1, h2, h3 {
@@ -124,31 +124,73 @@ h3 {
   letter-spacing: -0.008em;
 }
 
-/* 強調：色彩承載，不疊斜體 */
-h1 em, h2 em {
+/* B · 換字重（預設強調手法） */
+h1 em, h2 em, h3 em {
   font-style: normal;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--clay);
 }
+
+/* C · 螢光筆（語氣更重、一頁最多一兩次） */
+.hl {
+  background: linear-gradient(transparent 58%, #f7d9a0 58%);
+  font-style: normal;
+}
+
+/* E · 保險絲（全域、擋掉所有合成字形） */
+body { font-synthesis: none; }
 ```
 
 ```html
-<h1>標題裡<em>最重要</em>的那一段</h1>
+<h1>造工廠，還是寫<em>配方</em>？</h1>
+<h1>能用，但大半<span class="hl">不該</span>從這裡拿</h1>
 ```
 
-→ 強調由 clay 色承載，em 再重一級字重（600，比標題本身的 500 明顯、又不到會觸發合成粗體的 700）。
+🔴 **中文沒有斜體**（2026-09-20 定案：B＋C＋E 三招並用）。漢字字形沒有義大利體傳統，
+瀏覽器遇到 `font-style: italic` 只能機械傾斜漢字，筆畫變形。本規範原本寫「serif +
+italic 強調」、範本也內建 `h1 em { font-style: italic }`——**實測當月 38／45 份產出的
+主標題都在犯這個**，因為範本的示範文字就是這樣寫的。
 
-⚠️ **不要對中文用 `font-style: italic`**。中文字沒有 italic 字形，瀏覽器只能把正體字整個幾何傾斜（synthetic oblique），筆畫變形、重心歪掉。`font-synthesis-style: none` 擋不掉——實測 Chromium 對 CJK fallback 字體不套用該屬性，位圖與未設定時完全相同。唯一可靠的做法是不要在會吃到中文的選擇器上寫 italic。
+**強調手段對照表**（中文替代西文的 italic；參考 huashu-design 的排印分冊）：
 
-⚠️ **`<em>` 要顯式覆蓋，不能只靠「我沒寫 italic」**。瀏覽器預設樣式本來就有 `em { font-style: italic }`，Tailwind preflight 也不 reset 它——範本沒定義，UA 預設就生效。所以每份範本都要帶這一條（五份範本已內建）：
+| 西文慣例 | 中文替代 | 怎麼寫 | 什麼時候用 |
+|---|---|---|---|
+| italic 強調 | **換字重**（預設） | `font-weight: 700` ＋ clay 色 | 多數情況。安靜、不打斷閱讀 |
+| italic 書名／引用 | **螢光筆底色** | `.hl` 的線性漸層 | 語氣要重、想讓人停一下。一頁最多一兩次 |
+| italic 專名 | **著重號** | `text-emphasis: dot; text-emphasis-position: under` | 中文原生手法、最雅緻，但小字級幾乎看不見 |
+| —（防呆） | **保險絲** | `body { font-synthesis: none }` | 一律加。寫錯了也不會變形，自動退回正體 |
+
+⚠️ **保險絲的副作用：內文的 `<em>` 會失去強調**（2026-09-21 實測）。瀏覽器預設讓 `em` 斜體，保險絲擋掉合成斜體後，中文 em 會跟正文**一模一樣**——不再歪，但也看不出來了。所以範本另加字重讓它被看見。只改標題 em 不改內文 em，等於把「歪但看得到」換成「正但看不到」。
+
+📌 **本庫的內文 `em` 比上游多一條 `font-style: normal`**（2026-09-23 決定），五份範本一致：
 
 ```css
-em { font-style: normal; font-weight: 600; color: var(--clay); }
+em { font-style: normal; font-weight: 600; }
 ```
 
-這條是實測抓出來的：改完所有範本 CSS 之後產出一份新頁面，自檢仍報一處 CJK 斜體，來源就是內文一個包中文的 `<em>`。
+上游只寫 `font-weight: 600`，讓英文 em 保留真的義大利體。這裡改成**中英文一律不斜**：產出以中文為主、常中英混排，同一句裡「這個 *feature* 很重要」英文斜、中文不斜，接縫看得出來。代價是放棄西文的排版慣例，換中英混排的視覺一致。
 
-中英文用同一條規則統一處理：英文強調也不斜體，換來的是中英混排時的視覺一致。真正需要斜體的純西文片段（書名、學名、西文術語），在該處單獨寫 `font-style: italic`，不要放進會命中中文的全域規則。
+沒有跟著加 `color: var(--clay)`：那樣內文 em 會跟標題 em 同色，強調層次被拉平。**標題 em 重（700 ＋ clay）、內文 em 輕（只有字重）**，兩層分明。
+
+⚠️ **混字體強調是外行**（taste-skill §4.1）：要強調標題裡的字，用**同一個字體**的
+字重或斜體，不要在無襯線標題裡插一個襯線字（或反過來）。本規範的 B 就是同字體換字重。
+
+> Serif 當預設字體在別的情境是有爭議的——taste-skill 把它列為「最常被測出來的 AI
+> 破綻」。但它自己列的兩個例外（品牌明訂 serif、定位真的是 editorial）**本規範兩條都
+> 符合**：serif 來自 Anthropic 官方品牌，產出定位就是 editorial。所以 serif 留著，
+> 只拿掉斜體。
+
+### 排印細節（白拿的品質）
+
+```css
+/* 段落尾行不要留孤字；標題不要斷得難看 */
+p, li, td { text-wrap: pretty; }
+h1, h2, h3 { text-wrap: balance; }
+```
+
+`text-wrap` 現代瀏覽器都支援，成本為零、效果直接（參考 huashu-design：「白拿的排印
+品質」）。本庫原本 0 處使用。`pretty` 避免段落最後一行只剩一兩個字，`balance` 讓多行
+標題的每一行長度接近。
 
 ### 內文用 system sans
 
@@ -256,7 +298,9 @@ header.masthead { border-bottom: 1.5px solid var(--g300); }
 ```
 主容器寬度：min(94vw, 1760px)  ← 寬版、吃滿寬螢幕不浪費兩側留白（取代舊 1400px）
 長段落護欄：max-width: 72ch     ← 文字塊限行長、寬螢幕下避免一行上百字難讀（grid/卡片/表格不受限）
-頁面 padding：32px    ← 兩側
+頁面 padding：32px    ← 兩側（桌機）
+手機 padding：14px    ← ≤640px；32px 在 390px 螢幕上吃掉 16% 寬度，卡片內距同時收到 16px
+                        （範本已內建 640px 斷點）
 Hero 上 padding：80px
 Hero 下 padding：56px
 Section 上 margin：72px
@@ -270,7 +314,7 @@ TOC pill gap：8px
 
 - **暖色不刺眼**：`#FAF9F5` ivory 比純白柔和、長閱讀不疲勞
 - **clay 是 Anthropic 招牌**：對齊官方品牌、立刻識別「這是 Claude 做的」
-- **Serif 標題 + clay 色強調**：editorial / book / magazine 質感、提升閱讀儀式感
+- **Serif 標題**：editorial / book / magazine 質感、提升閱讀儀式感（強調改用字重或螢光筆，中文沒有斜體）
 - **三字體分工**：serif（標題權威）/ sans（內文可讀）/ mono（metadata 機器感）— 角色清楚不混
 - **Warm gray**：g100-g700 是暖灰、跟 ivory 同色系、不會出現「黑白藍」科技感
 - **1.5px 邊線**：比 1px 厚實、比 2px 不刺、editorial 風的 detail
