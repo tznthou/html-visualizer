@@ -98,6 +98,41 @@ try {
     const reacted = before.text !== after.text || before.preview !== after.preview || before.content !== after.content || before.body !== after.body;
     result.buttons.push({ sel, reacted, before: before.text, after: after.text });
   }
+
+  // 探索層：點第一個有說明的格子（沒有就點第一格），浮動說明窗要出現
+  // 只檢查新版（會建 .xp-panel）；舊版側欄頁內嵌的是舊腳本，本來就沒有浮動窗，不能報成錯
+  const hasXp = await page.$("[data-explore] svg.xplore .node");
+  const isNewXp = await page.$(".xp-panel");
+  if (hasXp && !isNewXp && (await page.$(".xp-side"))) {
+    result.buttons.push({ sel: "探索層（舊版側欄，未檢查浮動窗）", reacted: true, before: "—", after: "舊版" });
+  } else if (hasXp) {
+    const target = await page.evaluate(() => {
+      const nodes = [...document.querySelectorAll("[data-explore] svg.xplore .node")];
+      const withDoc = nodes.find((n) => document.querySelector('template[data-detail="' + CSS.escape(n.dataset.id) + '"]'));
+      return (withDoc || nodes[0]).dataset.id;
+    });
+    const node = await page.$('[data-explore] svg.xplore .node[data-id="' + target + '"]');
+    await node.scrollIntoViewIfNeeded();
+    await node.click();
+    await page.waitForTimeout(300);
+    const shown = await page.evaluate(() => {
+      const p = document.querySelector(".xp-panel");
+      return !!p && !p.hidden && p.getBoundingClientRect().height > 0;
+    });
+    result.buttons.push({ sel: "探索層點「" + target + "」開說明窗", reacted: shown, before: "關", after: shown ? "開" : "沒開" });
+  }
+  // 風格設定面板：按「風格設定」，面板要打開
+  const tw = await page.$(".vt-tw-launch");
+  if (tw) {
+    await page.keyboard.press("Escape");
+    await tw.click();
+    await page.waitForTimeout(200);
+    const open = await page.evaluate(() => {
+      const p = document.querySelector(".vt-tw-pop");
+      return !!p && !p.hidden;
+    });
+    result.buttons.push({ sel: "調整面板", reacted: open, before: "關", after: open ? "開" : "沒開" });
+  }
 } catch (e) {
   result.pageErrors.push("載入失敗：" + String(e).split("\n")[0]);
 }

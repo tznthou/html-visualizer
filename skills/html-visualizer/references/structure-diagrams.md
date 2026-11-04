@@ -256,31 +256,59 @@ viewBox **先排版、後定框**：內容排完取 bbox，寬高進位到 4 的
 
 分區內第一個節點上方留 ≥16px 給區名；最多 3 區，再多就該用泳道。圖例每一項包 `<g class="lg" data-kind="<kind>">`（跟節點的 `data-kind` 對得上），探索層才能點圖例藏一類。
 
-### 6.7 探索層（選配）
+### 6.7 探索層＋浮動說明窗（選配）
 
-一段共用的 CSS＋JS，疊在已畫好的 SVG 上，讓讀者**點一格只看相連的、沿箭頭追到底、shift 點兩格找最短路徑並編號、切作者寫好的章節視角**；網址 `#focus=<id>`／`#route=<a>~<b>`／`#view=<id>` 可直接貼給人。設計取捨：只取這四種互動，不做完整的圖表檢視器——搜尋、縮放平移、匯出圖片對一張看得完的圖沒有生產者。
+一段共用的 CSS＋JS，疊在已畫好的 SVG 上。讀者**點一格 → 浮動窗打開：上半是作者為這格寫的說明，下半是上下游與「沿箭頭追到底／找路徑」按鈕**；shift 點兩格找最短路徑並編號；章節按鈕切作者寫好的視角；網址 `#focus=<id>`／`#route=<a>~<b>`／`#view=<id>` 可直接貼給人。窗可拖、可換邊、開在所點格子的對面；點窗外任何地方、按 esc 或 ✕ 關閉；手機（≤760px）變底部抽屜。圖吃滿整個寬度。
 
-**掛載條件**：圖有分支／交接／回頭路，**且節點 ≥6**。三格直線鏈、單純分層圖不掛——沒東西可探索的圖掛互動是「強迫互動」。一頁多張圖時只挑最需要追線的那一張掛；深連結只作用在第一張。
+**為什麼用浮動窗**：只列出上下游是誰時，「這格在做什麼、為什麼、怎麼驗」沒有地方放，圖上一格又只塞得下兩三行字。每格帶一段說明、點開就能讀，比操作說明有用。
 
-**怎麼掛**（作者只做這四步，側欄與章節按鈕由腳本自己建）：
+**兩件事分開判斷要不要掛**：
+
+| 功能 | 掛的條件 |
+|---|---|
+| 追線／找路徑／章節 | 圖有分支／交接／回頭路，**且節點 ≥6**（沒東西可追的圖掛互動是強迫互動） |
+| 每格說明 | **有格子需要比圖上多兩行的說明**就寫；4 格的小圖也可以，**但一樣要包 `div.xp[data-explore]` 容器**（腳本只接容器裡的圖）。沒寫說明的格子，窗只顯示上下游 |
+
+一頁多張圖時共用一個窗；深連結只作用在第一張圖。
+
+**怎麼掛**（作者只做這幾步，窗、提示列、章節按鈕由腳本自己建）：
 
 ```html
 <div class="xp" data-explore>
   <div class="figure"><svg class="vb1000 xplore" viewBox="…">…§6.1～6.6 照畫，節點／線／標籤／圖例都帶身分標記…</svg></div>
   <!-- 選配：這張圖有兩種以上讀法才寫；每章 3～6 格、一句 note 講這章看什麼 -->
   <script type="application/json" class="xp-views">
-  [{"id":"main","label":"① 主線","focus":["a","b","c"],"note":"…"},
-   {"id":"gate","label":"② 閘那一段","focus":["c","d"],"note":"…"}]
+  [{"id":"main","label":"① 主線","focus":["a","b","c"],"note":"…"}]
   </script>
+  <!-- 選配：每格一段說明，id 對到節點的 data-id；data-tag 會顯示成窗頂的黑底標籤 -->
+  <template data-detail="b" data-tag="本版要改">
+    <h4>在做什麼</h4><p>……</p>
+    <h4>驗收</h4><ul><li>……</li></ul>
+  </template>
 </div>
+<!-- 圖外的元素也能開同一個窗（例如「規則一」按鈕）：id 對到一段 template 即可 -->
+<button data-detail-open="rule-1">規則一</button>
+<template data-detail="rule-1" data-title="規則一 消費者契約" data-tag="全域規則">…</template>
 ```
 
-1. 把 `assets/diagram-explore.css` 全文貼進頁面 `<style>`、`assets/diagram-explore.js` 全文貼進 `</body>` 前的 `<script>`（不外連、不改內容）。貼進去後 `grep -c '</script>'` 應該只多 1：內嵌腳本本文若出現 script 結尾標籤字樣會被瀏覽器提前切斷、整層靜默失效（0906 第一次接就撞到，`verify.py` 的「腳本無法解析」會抓）。
+1. 把 `assets/diagram-explore.css` 全文貼進頁面 `<style>`、`assets/diagram-explore.js` 全文貼進 `</body>` 前的 `<script>`（不外連、不改內容）。貼進去後 `grep -c '</script>'` 應該只多 1：內嵌腳本本文若出現 script 結尾標籤字樣會被瀏覽器提前切斷、整層靜默失效。
 2. `svg` 加 class `xplore`，外面包 `<div class="xp" data-explore>`。
-3. 節點 `g.node[data-id][data-kind][data-title]` 含 `rect.box`；線 `g.edge[data-from][data-to][data-label]` 含 `path.hit`＋`path.ln`；標籤 `g.elabel`；圖例 `g.lg[data-kind]`（§6.3～6.6 的片段已含）。
-4. 章節 JSON 選配。`data-title` 是側欄顯示名，寫節點第一行字。
+3. 節點 `g.node[data-id][data-kind][data-title]` 含 `rect.box`；線 `g.edge[data-from][data-to][data-label]` 含 `path.hit`＋`path.ln`；標籤 `g.elabel`；圖例 `g.lg[data-kind]`。`data-title` 是窗的標題，寫節點第一行字。
+4. 說明寫成 `<template data-detail>`，裡面是一般 HTML（小表格、狀態標籤、前後對照都可以）。**不要寫成 JSON 字串**：那樣只能放純文字，JSON 跳脫字元寫壞會炸掉整段腳本。說明的段落可以這樣分：在做什麼／誰來做／現況／為什麼不照舊做／驗收，挑適用的寫。
+5. `verify.py` 會檢查每段 template 都對得到節點或 `data-detail-open`，執行期會真的點一格確認窗有打開。
 
-**刻意不做**：搜尋、縮放平移、深色主題、匯出圖片、播放動畫——圖 ≤12 格一眼看得完，這些沒有生產者。**嵌在會剝掉 script 與 data-* 的 sandbox 環境時不適用**。
+**給非工程讀者**（2026-10-26 加）：讀者是老闆、業務這類只要看懂每格在講什麼的人時，浮動窗只留說明，把追線按鈕與上下游清單（`.xp-nav`）、拖曳把手（`.xp-grip`）、換邊鈕（`.xp-flip`）藏掉；選取高亮色從預設的藍改成頁面調色盤的深色，讓它跟頁面同一套顏色。貼在 `diagram-explore.css` 之後：
+
+```css
+.xp, .xp-panel { --xp-hot: var(--slate, #141413); }   /* 高亮色走調色盤變數，不寫死藍色 */
+.xp-panel .xp-nav, .xp-panel .xp-grip, .xp-panel .xp-flip { display: none !important; }
+.xp-panel { padding-top: 20px; }       /* 把手拿掉後補回頂端留白 */
+.xp-panel .xp-close { top: 10px; }
+```
+
+為什麼：評審把追線、找路徑、拖曳把手判為「工程師工具露在讀者面前」，非工程讀者點一格只想讀那格的說明；預設的藍色高亮又是整頁唯一的冷色，看起來像別的頁面貼進來。兩件都只改樣式，探索層腳本不用動，`#focus=` 深連結照常可用。
+
+**刻意不做**：搜尋、縮放平移、深色主題、匯出圖片、播放動畫、窗記住位置、窗可調大小——沒有生產者。**嵌在會剝掉 script 與 data-* 的 sandbox 環境時不適用**。
 
 ---
 
@@ -402,6 +430,6 @@ viewBox **先排版、後定框**：內容排完取 bbox，寬高進位到 4 的
 6. 中文字級 ≥12？沒有 `font-family` 屬性、沒有字面 Geist／Google Fonts？
 7. `<title>`／`<desc>` 有寫？marker／mask 的 id 有 slug 前綴？
 8. 圖例在圖區外的最底下？圖旁有一句話說明假設（若跳過了確認步驟）？
-9. 節點都是 `g.node[data-id]`、線都是 `g.edge[data-from][data-to]`、端點都指到存在的 id？（`svg-text-check.mjs` 會驗）有分支且 ≥6 格的圖掛了探索層（§6.7）、直線鏈沒掛？掛了就用 playwright 點一格看有沒有變淡、console 零錯誤。
+9. 節點都是 `g.node[data-id]`、線都是 `g.edge[data-from][data-to]`、端點都指到存在的 id？（`svg-text-check.mjs` 會驗）有分支且 ≥6 格的圖掛了探索層（§6.7）、直線鏈沒掛？寫了說明的格子，`verify.py` 會點一格確認浮動窗有開、console 零錯誤。
 
 `verify.py` 的版面健檢對 SVG 文字會誤報「被切掉」（它拿 `scrollWidth` 量 SVG 元素，數字沒意義）；**真正的檢查是第 5 條**——跑 `node <本 skill 目錄>/scripts/svg-text-check.mjs <file.html>`：對每段 `<text>` 用 `getBBox()` 比 viewBox 與它前一個兄弟 `<rect>`（遮罩或節點框），列出超出的。SVG 在 390／768px 報「凸出視窗」是 `.figure` 受控橫向捲動、屬預期。

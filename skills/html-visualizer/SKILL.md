@@ -19,7 +19,7 @@ description: 把長文件、報告、規格、設計決策、架構說明、教�
 
 預設用 **Anthropic 風格**（ivory 米白底 + clay 赤陶 accent + serif 標題 + 換字重強調 + warm gray）— editorial / book / magazine 質感、跟 Claude 官方品牌一致。
 
-完整 design tokens 見 `references/color-and-typography.md`、Anthropic-signature 元件見 `references/component-library.md` § 首段。Reference 範本見 `references/examples/anthropic-gallery/index.html`。
+完整 design tokens 見 `references/color-and-typography.md`、Anthropic-signature 元件見 `references/component-library.md` § 首段。風格總覽（四份範例入口＋設計系統樣張）見 `references/examples/anthropic-gallery/index.html`。
 
 **例外**：工程儀表板 / 重度互動表單 / 內部工具 / 使用者明確要 dashboard 風時、改用 functional 風（藍 accent + 純 sans）。判斷規則見 `references/do-and-dont.md` § 何時打破規則。
 
@@ -63,14 +63,14 @@ description: 把長文件、報告、規格、設計決策、架構說明、教�
 
 | 內容性質 | 用什麼範本起手 | 強制特徵 |
 |---|---|---|
-| **Marathon 收尾 / Sprint 結束 / 待拍板事項 ≥ 5 題 / 標題含 "marathon" / "收尾" / "追認" / "review 一批" / 含 "pending" / "QA pass" / "未 commit" / "未 push"** | ⭐ **`references/examples/marathon-decision-sheet/`** — 必先讀 該 README + 複製 `index.html` 改內容 | 題目地圖 / 就地拍板 / radio / sticky bottom bar with copy / sidebar nav / progress counter / pain card / before-after / failure tree / metric cards 全要 |
-| ⭐ **拍板題 < 5 題（不論關鍵字命中幾個）** | `assets/base-template.html` + 就地拍板卡（複製 marathon 範本的 `.inline-decide` 區塊與 sticky bar / 複製 builder）| **不套六段敘事**：開場兩三句講清背景 → 題目立刻出現，每題自帶背景與對照 |
+| **Marathon 收尾 / Sprint 結束 / 待拍板事項 ≥ 5 題 / 標題含 "marathon" / "收尾" / "追認" / "review 一批" / 含 "pending" / "QA pass" / "未 commit" / "未 push"** | ⭐ **`references/examples/marathon-decision-sheet/`** — 必先 Read 該 README + 複製 `index.html` 改內容 | 題目地圖 / 就地拍板 / radio / sticky bottom bar with copy / sidebar nav / progress counter / pain card / before-after / failure tree / metric cards 全要 |
+| ⭐ **拍板題 < 5 題（不論關鍵字命中幾個）** | 先看頁面主體：**主體就是要拍板** → `assets/base-template.html` 起手，它內建一張示範拍板卡（`.decide`：題目 → 樣張 → radio → 常駐補充框）與會顯示「已選 N / M · 還差：<題名>」的回傳列，照示範題加題；**主體是報告、盤點、研究結論，順帶 1–4 題** → `references/examples/editorial-report/` 原樣起手（拍板卡、底部列、摘要腳本已內建，題目就地放在背景段末尾） | 主體是拍板：**不套六段敘事**，開場兩三句講清背景 → 題目立刻出現，每題自帶背景與對照。主體是報告：照骨架 B。**題目地圖**（`qmap-list`）< 5 題可省，但第一題的可見文字位置 > 40% 時必放（verify 會量） |
 | 工程儀表板 / 監控介面 / dashboard 風偏好（user 明說）| `assets/base-template.html` 換 functional token（藍 accent + 純 sans；規則見 `references/do-and-dont.md` § 何時打破規則）| 就地拍板卡與 sticky bar 照 marathon 範本複製 |
-| ⭐ **教學 / 概念解釋 / 機制說明**（無待拍板）| ⭐ **`references/examples/explainer/`** — 必先讀 README 選骨架 A | 骨架 A 七段（一句話 → 類比 → 核心模型 → 走一遍 → 誤解 → **邊界** → 收合深入）+ 解釋類元件 + 漸進揭露 |
-| ⭐ **報告 / 盤點 / 健檢結論 / 研究結果**（無待拍板）| ⭐ **`references/examples/explainer/`** — 骨架 B | 骨架 B 六段（結論先講 → 全貌地圖 → 逐塊展開 → 交叉切面 → 待觀察 → 附錄收合）|
+| ⭐ **教學 / 概念解釋 / 機制說明**（無待拍板）| ⭐ **`references/examples/explainer/`** — 必先 Read README 選骨架 A | 骨架 A 七段（一句話 → 類比 → 核心模型 → 走一遍 → 誤解 → **邊界** → 收合深入）+ 解釋類元件 + 漸進揭露 |
+| ⭐ **報告 / 盤點 / 健檢結論 / 研究結果**（無待拍板）| ⭐ **`references/examples/editorial-report/`** 起手（先 Read 它的 README）；內容順序照 **`references/examples/explainer/`** 的骨架 B | 骨架 B 六段（結論先講 → 全貌地圖 → 逐塊展開 → 交叉切面 → 待觀察 → 附錄收合），版面用範例的主幹（結論數字 hero、頂端固定章節列、淡色大章節號開場、主張引言帶；元件見 `references/component-library.md` §「編輯報告類」）。**沒有拍板題時**照 README「無拍板題時怎麼裁」刪掉拍板卡、底部拍板列、章節列計數與拍板摘要腳本——四樣一起刪，只刪 HTML 不刪腳本會在載入時對不存在的按鈕掛監聽器、整段腳本炸掉 |
 | ⭐ **程式開發解說**（解釋剛改了什麼 / PR 導讀 / 架構變更說明；開發者受眾）| `assets/base-template.html` + code-shape 元件（**不套七段教學骨架、太重**）| 輕量三段：先講結論 → 結構 diff 或 call tree 秀「改了什麼 / 長什麼樣」→ 逐塊展開；code-shape 必配摘要文字說明；函式名可當內容、路徑當灰字註腳（見 `references/component-library.md` § Code-shape）|
-| 只要視覺風格參考、內容結構自理 | `references/examples/anthropic-gallery/` 或 `assets/base-template.html` | 編輯風純展示；⚠️ 這兩份**只給視覺不給骨架**，內容順序請照 explainer 的骨架走 |
-| ⭐ **規格 / 設計 / 方向要跟非技術 stakeholder（老闆 / 業務）對齊確認** | ⭐ **`references/examples/spec-alignment/`** — 必先讀 README + 複製 `index.html` | 由上而下（一句話 → 一張圖核心模型 → 使用者操作情境）+ 每情境配角色視角畫面 mock + 只留「最終規格 / 使用者 UX / 真正要拍板的技術決策」；**藏掉 現況→落差→修正推導、內部編號（R/OD/story id）、非決策細節**（雜訊會稀釋 stakeholder 掌握規格的能力） |
+| 只要視覺風格參考、內容結構自理 | `assets/base-template.html` 起手；配色、字級、元件長相先看 `references/examples/anthropic-gallery/`（風格總覽頁） | ⚠️ 兩份**只給視覺不給骨架**，內容順序請照 explainer 的骨架走 |
+| ⭐ **規格 / 設計 / 方向要跟非技術 stakeholder（老闆 / 業務）對齊確認** | ⭐ **`references/examples/spec-alignment/`** — 必先 Read README + 複製 `index.html` | 由上而下（一句話 → 一張圖核心模型 → 使用者操作情境）+ 每情境配角色視角畫面 mock + 只留「最終規格 / 使用者 UX / 真正要拍板的技術決策」；**藏掉 現況→落差→修正推導、內部編號（R/OD/story id）、非決策細節**（雜訊會稀釋 stakeholder 掌握規格的能力） |
 | 規格 / spec / ADR（**dev audience**、技術細節藍圖）| `assets/base-template.html` | 自己組元件 |
 
 **判斷流程（1 分鐘）**：
@@ -80,11 +80,12 @@ description: 把長文件、報告、規格、設計決策、架構說明、教�
    - 間接訊號：素材內含 5+ 條「待 user 確認 / 拍板 / review / 寫入 / commit」事項、或含「pending QA」「未 push」「未 commit」「等 user」字眼
 2. **任一訊號中 → 先數「實際要 user 拍板的題數」**（不是數關鍵字次數）：
    - **≥ 5 題 → marathon-decision-sheet 範本**（強制、不要 fallback）
-   - **< 5 題 → 輕量決策頁**：base-template + 就地拍板卡，開場兩三句就進題目。⚠️ 不要因為關鍵字命中就硬套六段敘事——實測 5 題的內容被套成 2265 行、每題墊了四百多行前置閱讀，讀者要捲過 58% 才看得到第一題
+   - **< 5 題、主體就是要拍板 → 輕量決策頁**：base-template + 就地拍板卡，開場兩三句就進題目。**< 5 題、主體是報告 → editorial-report 原樣**，題目就地放在背景段末尾。⚠️ 不要因為關鍵字命中就硬套六段敘事——實測 5 題的內容被套成 2265 行、每題墊了四百多行前置閱讀，讀者要捲過 58% 才看得到第一題
 3. 都不中 → 對照表選其他範本
 
 ### Step 1 思考階段（用 markdown）
 
+0. ⭐ **讀使用者的設定檔**：`python3 <本 skill 目錄>/scripts/profile.py show --rules`，印出來的文字規則當成這一頁的生成規則（偏好以設定檔為準；跟本 skill 的「規範」衝突時以本 skill 為準——規範＝相反做法本身就是缺陷，例如中文不用斜體）。字型、配色、字級、寬度這些數值**不用抄**，Step 3 的自檢會蓋章套用。沒有設定檔就全部沿用範本原值
 1. **理解需求**：呈現什麼資訊、給誰看、為了什麼決策
 2. **Read 對應範本 README**（marathon-decision-sheet 的話、必先讀）
 3. **規劃結構**：依範本框架寫 markdown outline（區段順序、每段重點、需要的視覺化類型）
@@ -102,21 +103,30 @@ description: 把長文件、報告、規格、設計決策、架構說明、教�
      | UI 結構與狀態歸屬 | component tree（code-shape）|
      | 檔案分工 / 大型重構 | 淺層檔案責任樹（code-shape）|
      | 跨部件互動時序 | SVG 時序圖（`references/structure-diagrams.md` §7.3；有分支用組合片段）|
-     | ⭐ 分支 / 角色交接 / 回頭路 / 分區跨線 / 多父或有環的依賴 | **SVG 結構圖**（`references/structure-diagrams.md`：流程圖 / 泳道 / 狀態機 / 架構 / 依賴圖…）；單向直線鏈才用 div 流程圖。**該圖 ≥6 格 → 掛探索層**（§6.7：點格聚焦 / 追上下游 / 兩點路徑 / 章節視角；`assets/diagram-explore.{css,js}` 內嵌）|
+     | ⭐ 分支 / 角色交接 / 回頭路 / 分區跨線 / 多父或有環的依賴 | **SVG 結構圖**（`references/structure-diagrams.md`：流程圖 / 泳道 / 狀態機 / 架構 / 依賴圖…）；單向直線鏈才用 div 流程圖。**該圖 ≥6 格 → 掛探索層**（§6.7：點格聚焦 / 追上下游 / 兩點路徑 / 章節視角；`assets/diagram-explore.{css,js}` 內嵌）；**有格子需要比圖上多兩行的說明 → 寫 `template[data-detail]`，點一格就在浮動窗讀到**（小圖也適用，§6.7）|
      | 改了什麼（結構 / 流程 / 檔案佈局）| 結構 diff |
      | 改了什麼（畫面外觀）| Before-After UI mock |
      | 資料的形狀 | 交棒 `chart` |
-4. **思考互動**：marathon-decision-sheet 必含 radio + sticky copy + 題目地圖（題數 ≥ 5）；其他範本依需求加
+4. **思考互動**：marathon-decision-sheet 必含 radio + sticky copy + 題目地圖（題數 ≥ 5 必放；< 5 題但第一題的可見文字位置 > 40% 也必放）；其他範本依需求加
    - ⭐ **逐題標記 UI/UX 決策**：掃每個待拍板決策題、標出本身涉及 UI/UX 的（頁面 / 按鈕 / 欄位顯示 / modal / 流程入口 / 排版 / 順序 / 顯示條件 / 文案呈現）。被標到的題 → 規劃時就排進「現況畫面 vs 修改後畫面」對比 mock、**不要只列文字選項**。判斷準則見 `references/do-and-dont.md` § UI/UX 決策題
 
 ### Step 2 產出階段（寫 HTML）
 
 5. **起手式**：
    - **marathon-decision-sheet 場景** → 複製 `references/examples/marathon-decision-sheet/index.html` 改內容、保留 CSS / JS / 結構
+   - **報告類（editorial-report）、教學類（explainer 骨架 A）、規格對齊（spec-alignment）** → 複製該範例的 `index.html` 改內容，保留 CSS／JS／結構
    - 其他場景 → 複製 `assets/base-template.html` 起手
    - **絕不從零寫**
 6. **填內容**：把 markdown outline 翻成 HTML 元件、保留範本的互動 JS
-7. **配色 / 字體**：照 `references/color-and-typography.md` 的 token、不要自創
+7. **配色 / 字體**：照 `references/color-and-typography.md` 的 token、不要自創；使用者設定檔的值由 Step 3 自檢蓋章覆寫，不要手抄進頁面
+   - ⭐ **字級要能被「風格設定」推動**：`<style>` 與 `style=""` 裡寫死的 px 字級，自檢會自動改成乘倍率；**腳本在執行期組出來的行內字級改不到**，要自己寫成 `calc(13px * var(--fs, 1))`（字級覆蓋率檢查會抓漏）。固定在畫面上的介面列（sticky 拍板列、頂部導覽）加 `data-tw-lock`，字放到 200% 時才不會蓋掉半個畫面
+   - ⭐⭐ **好讀的五條硬規則**（2026-10-27 起；方向是讓讀者好讀、好回饋，設計與創意只是手段）。前三條自檢會量，有 ✗ 就修：
+     1. **小字只用墨色**：24px 以下的字用 `--text-soft`／`--clay-ink`／`--green-ink`／`--yellow-ink`；`--clay`、`--olive`、`#c49845`、`--g500` 只當填色、邊框、圖示與大字（當小字只有 2.5–3.5:1）。白字按鈕底用 `--clay-d`。對照表見 `references/color-and-typography.md` §對比規則
+     2. **中文長標題切語意片段**：超過 12 個中文字的 h1／h2 才切，h3 不切（h3 斷在哪都還讀得懂，切了反而在窄欄裡留孤字）。寫法 `<span class="ph">為什麼登入</span><span class="ph">要發兩張憑證</span>`，瀏覽器只在片段之間換行；強調詞兩側不加半形空格
+     3. **淡入動畫要 fail-open**：沒捲到的段落在列印、存 PDF 時也要看得到（範本已內建 `@media print`；自己寫淡入就照抄）
+     4. **行長**：容器可以滿寬，裡面兩行以上的文字 ≤ 72ch（提示框、卡片內文也算）
+     5. **手機表格看形狀選做法**：欄數 ≤ 4、每格是短文字的比較表 → 640px 以下每列變一張卡（寫法見 `references/component-library.md` § 表格在手機每列變一張卡）；欄數 > 4 或以數字為主的資料表 → 外包 `.tbl-wrap` 整表橫向捲動。兩種都不要用 `overflow-wrap: anywhere` 把欄位壓成一字一行。橫向流程鏈在 640px 以下改直排
+   - ⭐ **圖示用 lucide inline SVG、不用 emoji**（`references/component-library.md` § 圖示）。設定檔 `checks.noEmoji` 開著時自檢會擋
 8. **存檔**：寫到 `~/Documents/claude-html/{YYYY-MM}/{slug}-{date}.html`（歸檔根目錄可用環境變數 `HTML_VISUALIZER_ARCHIVE_DIR` 改）（**不要再寫 /tmp**——系統暫存區重開機就清空，而這些產出常被回頭參照）。先寫死、Step 3 自檢後再 open
 
 ### Step 3 ⭐ 審稿階段（寫完 HTML 後、open 前必跑）
@@ -139,37 +149,48 @@ description: 把長文件、報告、規格、設計決策、架構說明、教�
     python3 <本 skill 目錄>/scripts/verify.py <file>
     ```
 
-    一次跑完並依產出類型自動分流。每一項都對應一次真實事故，來龍去脈全文在 `references/incidents.md`；這裡只列它抓什麼、為什麼靜態看不到：
+    ⭐ **它會先「蓋章」、改寫受檢檔**：①把使用者設定檔選過的值寫成 `:root` 變數 ②把寫死的 px 字級與間距改成乘 `--fs`／`--dens` 倍率 ③補上「風格設定」面板（`assets/tweaks.{css,js}`，缺就注入、舊版整段換新）。三件都冪等，重跑不會疊加；倍率為 1 時頁面外觀逐像素不變。範本原檔不蓋；唯讀環境或幫別人審稿時加 `--no-stamp`。寫不進去會標「未蓋章」，不是通過。
 
-    | 檢查 | 抓什麼 | 為什麼非它不可（日期對應 incidents.md 各段） |
-    |---|---|---|
-    | 結構完整性 | 標籤平衡、標題有命名 | — |
-    | 腳本健檢 | 每個 inline script 跑 `node --check`；JS 抓的元素 id 真的存在 | 08-13：JS 字串混進真換行、整段 SyntaxError，複製鈕按了沒反應。它不在標記裡，在「腳本能不能跑」 |
-    | 執行期健檢 | playwright 真的載入頁面抓 pageerror，再按一次複製鈕與預覽鈕看有沒有變 | 09-09：砍掉題目地圖後 `qmap.remove()` 對 null 炸掉，同區塊後面的監聽器全沒掛，語法檢查全綠。靜態檢查永遠有下一種漏法，「載入→有沒有炸→按下去有沒有變」不會漏 |
-    | 樣式健檢 | 每個 inline `<style>` 抓多一個 `}`、規則沒收尾、孤兒屬性 | 09-08：用行號切 CSS 切在規則中間，整頁沒樣式；括號左右各 158 剛好平衡。括號平衡量的是數量，合法性要的是結構 |
-    | class 撞車 | 同一元素掛兩個都在管佈局的 class；跨 `<style>` 區塊判 `✗`、同區塊只提示 | 09-08：為了讓「每段都有視覺元件」變綠套了共用樣式的 `.timeline`，中文被壓成一個字一行。它抓原因、下一列的四種崩潰抓症狀 |
-    | 版面健檢 | 390／768／1440px 真渲染：整頁橫向溢出、凸出視窗、被切掉的文字；四種可讀性崩潰（直排、壓扁、對比不足、被蓋住）；表格欄位失衡與 `nowrap` 長內容；每個寬度存一張整頁截圖並印路徑 | 跑版不在標記裡，只有座標算數（首次上線抓到自家頁 6 處）。四種崩潰不溢出也不切字，只量溢出的檢查全放行。09-09：為了過 390px 直排檢查給表格末欄加 `nowrap`，桌機兩欄剩一行三四個字 |
-    | SVG 文字 | 偵測到 `<svg>` 自動跑 `svg-text-check.mjs`：text 不超出 viewBox 與遮罩、線端點指到存在的節點 | 09-05：版面健檢的 `scrollWidth` 對 SVG 沒意義，會誤報「被切掉」 |
-    | CJK 斜體 | 與版面健檢同一支腳本：computed `font-style` 非 normal、`font-synthesis` 仍含 `style`、且元素自身的直接文字節點含中文 → `✗` | 09-11：中文沒有 italic 字形，套了只會被幾何傾斜。這條規則本來就確立過、也修乾淨過，交棒到本 skill 時掉了，反而寫進核心風格宣告，實測單頁 17 處。CSS 可能來自任何一層選擇器，靜態 grep 抓不到。09-23 補 `font-synthesis` 判準：設了保險絲的頁面渲染是正體，只讀 `font-style` 會誤報 |
-    | Session 識別 | `VT_SESSION` 已填值 | 多視窗並行時分不出來源 |
-    | 拍板機制 | 決策卡↔選項↔摘要三方一致、每題補充框且被抓取、複製三件套、無下拉選單、無範本 placeholder | 範本 placeholder 沒砍乾淨，使用者預覽看到不相干的舊題目 |
-    | 閱讀動線 | 第一題位置 ≤ 40%、題數 ≥ 5 有題目地圖 | 舊版第一題平均落在 62% |
-    | 呈現品質 | 每段都有視覺元件、中英混雜詞 | — |
+    一次跑完並依產出類型自動分流：結構完整性（標籤平衡 / 標題）、⭐**腳本健檢**（每個 inline script 跑 `node --check` / JS 抓的元素 id 真的存在）、Session 識別已填值、拍板機制（決策卡 ↔ 選項 ↔ 摘要三方一致 / 每題有補充框且被抓取 / 複製摘要三件套 / 無下拉選單）、閱讀動線（題數 ≥ 5 要有題目地圖；< 5 題時第一題的可見文字位置 > 40% 也要有）、呈現品質（每段都有視覺元件 / 中英混雜詞）。
 
-    規則（違反任一條就是在重演上面某次事故）：
+    🔴 **腳本健檢為什麼存在**（2026-08-13 實際事故）：一份決策頁 13 項自檢全過、open 給使用者後，複製鈕**按了完全沒反應**。根因是 JS 字串裡混進真正的換行字元 → 整個 script 區塊 SyntaxError → 事件監聽器從未掛上。**結構、拍板機制、文案檢查全都看不到這種錯——它不在標記裡，在「腳本能不能跑」。** 高風險寫法：用腳本產生 HTML（腳本寫腳本）時，`\n` 之類的轉義會被多吃一層；要放換行改用 `String.fromCharCode(10)` 常數，完全不用轉義字元即免疫此類問題。
+    ⚠️ 機器上沒有 `node` 時這項會標成「無法驗證」而**不是通過**——看到它就別當作驗過了。
 
-    - **「未驗證」不等於通過**：找不到 `node`、playwright 或瀏覽器時相關項標 `?`，看到就別當驗過了。pnpm 專案設 `HTML_VISUALIZER_PLAYWRIGHT_ROOT=<repo>/node_modules/.pnpm/playwright@<版本>/node_modules`。趕時間可加 `--no-layout` 跳過真渲染，但那就是沒驗
-    - **有 `✗` 就修完再 open**。唯一例外：含 SVG 的頁面，版面健檢對 `<svg>` 報「凸出視窗」時先確認外層是不是 `.figure`（受控橫向捲動），是就屬預期；「文字被切掉」對 SVG 已排除誤報，那條紅字要當真
-    - **不要為了讓某項自檢變綠而改東西**：不套已定義的 class 名（套用前先 `rg '\.<名字>\s*\{' <head 檔>` 確認），不對內容欄加 `nowrap`。凡「為了過檢查」而改的，一律親自看渲染結果，不能只信同一支自檢再跑一次通過
-    - **版面健檢證不了樣式有生效**：它量座標，樣式全失效時每個元素都還在原位；兩項一起看
-    - **不要用行號切 CSS 片段**：複用範本樣式就整段複製到規則邊界，或整份 head 一起帶
-    - **表格寫法**：`table-layout: fixed` ＋ `<colgroup>` 明定各欄百分比，只有「A／B」標籤欄可 `nowrap`，手機包 `overflow-x: auto` 整表橫向捲動（範例見 `references/component-library.md` § 方案對照表）
-    - **砍範本區塊時對應的 JS 一起砍或加 null 防護**：同一個 script 區塊任何一行炸掉，後面的監聽器全不掛。用腳本產 HTML 要放換行改用 `String.fromCharCode(10)`，不用轉義字元
-    - **別再自己現寫 grep**：手打正則出錯會產生假警報
+    🔴 **執行期健檢**（2026-09-09 加，同一支指令內建，用 playwright 真的把頁面跑起來）：抓載入時的 pageerror，再按一次複製鈕與預覽鈕，看頁面有沒有任何可見變化。
+
+    **為什麼存在**（2026-09-09 同型事故再一次）：決策頁砍掉了「題目地圖」那段 HTML，腳本裡 `qmap.remove()` 對 null 炸掉，同一個 script 區塊後面的複製鈕監聽器全沒掛上。語法檢查、版面健檢、拍板機制三方一致全綠，「JS 參照的元素都存在」只給黃燈並註「動態產生的可忽略」，於是被忽略了。**靜態檢查永遠有下一種漏法**（08-13 是換行字元炸 SyntaxError、09-09 是 null 存取）；「載入 → 有沒有炸 → 按下去有沒有變」這三步不會漏。回掃當月 112 份產出，另抓到 3 份載入就炸的頁面。
+    ⚠️ 同一個 script 區塊裡任何一行炸掉，**它後面的所有監聽器都不會掛上**；砍範本區塊時，對應的 JS 要一起砍或加 null 防護（範本 `renderQuestionMap` 已補）。
+    ⚠️ 這項標「未驗證」時同樣**不算通過**。
+
+    ⭐ **樣式健檢**（2026-09-08 加，同一支指令內建）：掃每個 inline `<style>`，抓三種會讓瀏覽器**從該行起丟棄後面所有 CSS** 的結構錯——多一個 `}`、規則沒收尾、孤兒屬性（規則開頭被切掉）。
+
+    🔴 **為什麼存在**（2026-09-08 實際事故）：一份決策頁 9 項自檢全過、版面健檢在三個寬度都說沒跑版，open 給使用者後**整頁沒有樣式**。根因是前一天用 `sed -n 'A,Bp'` 從範本切 CSS 片段，切點落在規則中間。當時做過括號檢查、得到「左 158 右 158 平衡」——因為多切掉一個 `{` 又多留一個 `}`，數量剛好抵銷。**括號平衡量的是數量，CSS 合法性要的是結構。** 而且失效是沉默且連鎖的：症狀出現在離錯誤很遠的地方（錯在第 508 行、新加的樣式在第 667 行），看新加那段永遠找不到原因。
+    🔴 **四種可讀性崩潰為什麼要另外量**（實際事故）：一份報告 18 項自檢全過、版面健檢三個寬度都說沒跑版，交付後被回報**日期清單的中文被壓成一個字一行**。根因是為了讓「每段都有視覺元件」變綠，把共用樣式已定義的 `.timeline`（七欄網格）套到一個兩欄清單上，兩套佈局互相覆蓋。**原本的檢查看不到**——直排既不溢出視窗、也沒有文字被切掉，只是變得超高。同一個 class 撞車還可能表現成元素被壓扁、文字看不見、被蓋住，所以四種一起量。
+    🔴 **連帶新增 class 撞車靜態檢查**（在「樣式健檢」段）：同一個元素掛了兩個都在管佈局的 class 就報，跨 `<style>` 區塊（自訂 CSS 撞共用樣式）判 `✗`、同區塊（作者刻意覆寫，例如 `.ba-grid.venn` 改欄數）只給提示。**它抓的是原因、四種崩潰抓的是症狀**，兩邊互補。
+    🔴 **不要為了讓某項自檢變綠而套用已定義的 class 名**——這正是上面那次事故的動作。要新元件就用自己的命名空間；套用前先 `rg '\.<名字>\s*\{' <head 檔>` 確認共用樣式沒定義過。凡是「為了過檢查」而改的東西，一律要親自看渲染結果，不能只信同一支自檢再跑一次通過。
+    🔴 **表格欄位失衡＋逐寬度截圖**（2026-09-09 加，版面健檢內建）：量每張表格，某欄平均超過 12 字卻被壓到不足 8 字寬、疊 6 行以上，且同表另一欄寬它 2.5 倍以上就報；`<td>` 上掛 `white-space: nowrap` 而內容 ≥ 40 字也報。每個寬度另存一張整頁截圖並印出路徑（預設在系統暫存目錄的 `html-visualizer-shots/`，可用 `HTML_VISUALIZER_SHOT_DIR` 改）。
+
+    **為什麼存在**（2026-09-09 實際事故，同一天第二次）：一份評估頁 18 項自檢全過、三個寬度都說沒跑版，開給使用者後**方案表的「做法」「改動」兩欄一行只剩三四個字，「取捨」欄佔了一半寬**。根因是為了讓 390px 的「文字被壓成直排」變綠，給表格末欄加了 `white-space: nowrap`——手機寬度確實過了，桌機上那欄把整列寬度吃光。直排檢查的門檻是「不到三個字寬」，一行四個字疊十行量不到；而作者改完只重跑同一支自檢、沒看畫面。**這正是上一條「為了過檢查而改的東西一律要親自看渲染結果」講的事，規則已經寫在那裡、還是踩了**——所以現在把截圖直接印在結果裡：跑完自檢**必看 1440px 那張截圖**，不看不算跑完。
+
+    表格的正確寫法：`table-layout: fixed` ＋ `<colgroup>` 明定各欄百分比；只有「A／B」這種標籤欄可以 `nowrap`；手機寬度包一層 `overflow-x: auto` 讓整表橫向捲動，不要動欄位的換行。範例見 `references/component-library.md` § 方案對照表。
+
+    ⚠️ **版面健檢證不了樣式有生效**——它量的是溢出座標，樣式全失效時每個元素都還在自己位置上、量不出異常。兩項要一起看。
+    ⚠️ **不要用行號切 CSS 片段**：要複用範本樣式就整段複製到規則邊界，或整份 head 一起帶。
+
+    ⭐ **版面健檢**（同一支指令內建，用 playwright 無頭 chromium 在 390 / 768 / 1440px（設定檔 `checkWidths` 可改）真的把頁面畫出來）：量整頁橫向溢出、凸出視窗的元素、被容器切掉的文字，**以及樣式撞車的四種可讀性崩潰**（文字被壓成直排／元素被壓扁到沒有高度／文字與背景對比不足看不見／被不透明元素蓋住），並指名是哪個元素。**跑版不在標記裡**——同一份 HTML 可以在桌機好好的、在手機整片凸出去，靜態掃 class 名稱永遠猜不到，只有量出來的座標算數（首次上線就在自家決策頁抓到 6 處手機跑版）。趕時間可加 `--no-layout` 跳過；找不到瀏覽器時同樣標「未驗證」而非通過。 pnpm 專案的 playwright 不會被提升到 `node_modules/playwright`，指令從專案根跑仍會說找不到；設 `HTML_VISUALIZER_PLAYWRIGHT_ROOT=<repo>/node_modules/.pnpm/playwright@<版本>/node_modules` 即可。
+
+    ⭐ **CJK 斜體**（本庫補，2026-09-11 加、09-23 補判準，版面健檢同一支腳本內建）：元素的 computed `font-style` 不是 normal、`font-synthesis` 仍含 `style`，而且元素自身的直接文字節點有中文，就報 `✗`。CSS 可能來自任何一層選擇器，靜態 grep 抓不到，只能讀 computed style。`font-synthesis` 是第二道判準：設了 `none`（保險絲）的頁面畫出來是正體（09-23 逐像素實測），只讀 `font-style` 會誤報。
+    **為什麼存在**：中文沒有 italic 字形，瀏覽器只能把正體字整個幾何傾斜，筆畫變形。這條規則確立過、也修乾淨過，交棒到本 skill 時掉了，反而寫進核心風格宣告，實測單頁 17 處。來龍去脈見 `references/incidents.md` 2026-09-11。
+
+    ⭐ **可讀性三項＋回傳列**（2026-10-27 加，版面健檢與呈現品質內建）：①**小字對比不足**——逐元素量 WCAG AA（小字 4.5:1、大字 3:1），列出「前景 在 背景」色碼與元素；改法是換墨色 token，不是調淡底色。②**列印時看不見**——模擬一次捲動後切到列印模式，量還停在透明的文字；捲入淡入沒寫列印規則時，讀者存 PDF 會整段空白（2026-10-27 範例實測 95 段）。③**標題孤字**——h1–h3 任一行只剩一個漢字。④**回傳列＋反白留言**——缺底部回傳列或全頁評論系統即 ✗。⑤**拍板選項不預設勾選**、⑥**補充框被藏起來**——兩條都是既定的使用偏好，範本曾同時違反兩條；⑦**結束標籤不重複**——存檔格式化工具會替片段補一組 `</body></html>`，拼回整頁後評論系統落在 `</html>` 之後。⑧**拍板選項鍵盤選得到**——拍板卡裡的 radio 用 `display:none` 或 `visibility:hidden` 藏起來即 ✗（Tab 落不到，鍵盤拍不了板）；視覺隱藏要用 `opacity:0`＋`position:absolute`，整張 label 在 `:has(input:focus-visible)` 時給 3px 外框（`assets/base-template.html` 的 `.choice` 即此寫法）。
+    **為什麼存在**：2026-10-27 用得獎網站評審標準重審六份範本，六份都沒過；原本 18 項自檢全綠，因為「看不見」只抓 1.6:1 以下，赤陶、橄欖綠、黃當小字（2.3–3.5:1）全數放行，一次掃出上百處。
+
+    - **有 `✗` 就修完再 open**，不要先開給人看。唯一例外：含 SVG 結構圖的頁面，版面健檢對 `<svg>` 的「凸出視窗」「文字被切掉」是已知誤報（`.figure` 受控橫向捲動），SVG 文字真正的檢查是 `scripts/svg-text-check.mjs`（`references/structure-diagrams.md` §9）
+    - ⚠️ 別再自己現寫 grep：手打正則出錯會產生假警報（實測踩過——寫錯的檢查回報「每段都是純文字牆」，其實產出沒問題）
 
 14. ⭐ **看截圖**：版面健檢每個寬度都印了整頁截圖路徑，用你的看圖工具看 1440px 那張（手機版另看 390px）。這一步不是可選——2026-09-09 兩次同型事故都是自檢全綠、畫面不能看。
 15. ⭐ **人工確認指令標 `!` 的兩項**（機器判斷不了）：
-    - **UI 決策題的畫面對照**：指令只報「幾個畫面樣張 / 幾題」，要你自己判斷哪些題涉及畫面（頁面 / 按鈕 / 欄位顯示 / modal / 排版 / 順序 / 文案）。涉及畫面的題**每題至少 2 個樣張**（現況 + 改後），判準見 `references/do-and-dont.md` § UI/UX 決策題
+    - **UI 決策題的畫面對照**：指令只報「幾個畫面樣張 / 幾題」，要你自己判斷哪些題涉及畫面。它認得的樣張結構是 class 名含 `mock`（base／explainer）、`ba-col`（Before-After 對照）、`cmp-col`、`mkf`（editorial 的 `.cmp` 兩欄對照）、`screen`（spec-alignment 的角色畫面）的元素，巢狀的只算最外層一張；自己做的樣張外層掛其中一個 class 才數得到。流程圖、數字對照這類具象示意不算畫面樣張、不會被數到，那題本來就不涉及畫面時，0 是對的。marathon 範本目前沒有內建這類結構（頁面 / 按鈕 / 欄位顯示 / modal / 排版 / 順序 / 文案）。涉及畫面的題**每題至少 2 個樣張**（現況 + 改後），判準見 `references/do-and-dont.md` § UI/UX 決策題
     - **純展示的骨架順序**：指令只列出段落 id，要你自己對照骨架 A / B（見 `references/examples/explainer/README.md`）。骨架 A 缺「一句話定義 / 核心模型 / 邊界」任一、骨架 B 缺「結論先講 / 待觀察」任一，即違規
 16. **跑完才 open**（存放路徑與索引見 § 開檔方式）
 
@@ -186,22 +207,24 @@ description: 把長文件、報告、規格、設計決策、架構說明、教�
 | 元素 | 細節 |
 |---|---|
 | `<title>` | 對應內容主題、不要用「Untitled」/「Document」 |
-| Tailwind CDN（選配加速器）| `<script src="https://cdn.tailwindcss.com"></script>`、不用 build tool。⚠️ **版面骨架不能只靠它**：配色與 layout 要由 inline `<style>` 承載，CDN 只當一次性微調用。歸檔產出要幾個月後還打得開，而 play CDN 官方標明非 production 用、隨時可能限流或改行為。實測擋掉該網域：flex 49→0、grid 24→0，sidebar 攤平佔滿首屏、sticky bar 蓋住內文。範本已在 `<style>` 內備好同名 fallback（preflight + utility + `md:`/`lg:` variants），**新增 utility class 時一併補進去** |
+| 樣式寫在頁內 | 不載入外部 CSS 框架、不用 build tool：樣式寫在頁內 `<style>`，配色用 CSS 變數（2026-10-27 拿掉 Tailwind CDN：離線也穩、少一個外部依賴） |
 | 配色 token | 從 `references/color-and-typography.md` 複製 CSS variables、不自創 |
 | 字體 stack | Apple system + Noto Sans TC、見 typography reference |
-| 容器寬度 | 主容器 `width: min(94vw, 1760px)` 寬版置中（吃滿寬螢幕、不浪費兩側留白）；**長段落文字另加 `max-width: 72ch` 行長護欄**、grid / 卡片 / 對比 / 表格 / mock 吃滿寬。範本已內建此策略、直接複製即可——`base-template` / `explainer` / `spec-alignment` 是 `.wrap` class，`marathon-decision-sheet` 是 `max-w-[1760px] w-[94vw] mx-auto`（`<style>` 內有同名 fallback，CDN 掛掉仍生效）|
+| 容器寬度 | 主容器 `width: min(94vw, var(--wrap-max, 1760px))` 寬版置中（1760 是預設；設定檔 `tokens.layout.maxWidth` 與「風格設定」的「內容寬度」改的就是這個變數）（吃滿寬螢幕、不浪費兩側留白）；**長段落文字另加 `max-width: 72ch` 行長護欄**、grid / 卡片 / 對比 / 表格 / mock 吃滿寬。範本 `.wrap` 已內建此策略、直接複製即可 |
 | Header | 標題 + 副標、含日期 / 進度 / context |
 | 主要區段 | `<section id="...">` 帶 anchor 給 nav 用 |
-| Footer / Sticky bar | 如有互動或 export 需求、加 sticky bottom bar |
+| ⭐ **回傳列**（每頁都有，2026-10-27 起）| 頁面底部一條固定列，**從頁首就顯示**（不做「捲到第一張拍板卡才出現」）：「反白任何一段文字就能留言 · 已留 N 則」＋「預覽」（`id="preview-btn"`）＋「複製給 AI」。沒有拍板題時複製「頁面標題＋全部留言」；有拍板題時第一行換成「已選 N / M · 還差：<題名>」（點了跳到那題），複製內容只含已選的題並寫明還有幾題沒選（`base-template.html` 已內建）。手機上最多兩行、約 90px 高，超過就縮成一行「進度 · 下一題 →」＋複製鈕。預覽是從底部升起的抽屜、停在列上方、附關閉鈕，不在列內往上長。有拍板題時另有三件（2026-10-27 第 3 輪）：補充寫了但那題沒選，列上與抽屜底部提示「第 N 題寫了補充但還沒選，這段不會複製」；選項與補充存 localStorage、重新整理會還原，抽屜有「清除我的選擇」；腳本依兩條固定列的實際高度設 `scroll-padding`，Tab 到的選項不會被列蓋住。複製格式只有一種，見 `references/interaction-patterns.md` § 複製摘要格式。`base-template.html` 與四份範例都已內建，**一律照抄這條**，不要自己另做固定在底部的列（風格設定鈕只認得這條）；`html`／`body` 不要設 `overflow`（會讓 sticky 失效）。為什麼：讀者不知道能反白留言、各頁回饋入口長得不一樣時，讀完有意見只能另開對話打字，引用不到原文 |
 | ⭐⭐ **就地拍板**（有待拍板題時）| 每題放在它的背景段落末尾、同一張卡收完「問題 → 對照 → 選項 → 補充框」；只有不需要背景的程序題才收進尾段「程序快答」。範本 `.inline-decide` 區塊即此形態 |
-| ⭐ **題目地圖**（拍板題 ≥ 5 題時）| 開場區之後放一張「本次要你拍 N 題」清單卡：每題一行 + 已選 / 未選狀態 + 點擊跳到它的段落。讓「已有脈絡、只想拍完」的讀法不必捲過整篇。範本用 `renderQuestionMap()` 自動生成、不用手工維護 |
+| ⭐ **題目地圖**（拍板題 ≥ 5 題必放；< 5 題可省，但第一題的可見文字位置 > 40% 時必放）| 開場區之後放一張「本次要你拍 N 題」清單卡：每題一行 + 已選 / 未選狀態 + 點擊跳到它的段落。讓「已有脈絡、只想拍完」的讀法不必捲過整篇。範本用 `renderQuestionMap()` 自動生成、不用手工維護 |
 | ⭐ **圖像化承載**（每個主要區段）| 資訊優先用視覺元件呈現、文字只做補述。連續三行以上純文字說明 = 該回頭找對應的視覺形態（`references/component-library.md`；真資料圖表交棒 `chart`）|
 | ⭐⭐ **Session 識別**（每份產出都要）| 多視窗並行時，一眼認出這份是哪個 session 產的。**寫 HTML 前先跑** `eval "$(<本 skill 目錄>/scripts/session-label.sh)"` 取得 `$VT_LABEL` / `$VT_ID`，填進 snippet 的 `window.VT_SESSION`。三層識別（分頁標題前綴 / 彩色 favicon / 頂部色帶徽章）整段見 `references/session-identity.md`；`base-template` 與 explainer / spec-alignment / marathon-decision-sheet 三份範例已內建、只需填值 |
 | ⭐ **解釋型骨架**（純展示內容）| 內容順序照 `references/examples/explainer/README.md` 的骨架 A（概念解釋）或骨架 B（報告盤點）走，不要每次重新發明。**邊界段不可省**（沒有它讀者會把剛學到的東西過度外推）|
 | ⭐ **漸進揭露**（長的純展示內容）| 主線只留所有人都該知道的，原理 / 推導 / 邊界案例收進 `<details class="reveal">`。摘要行必須能獨立判斷值不值得展開，寫「更多」等於沒寫。見 `references/interaction-patterns.md` § 漸進揭露 |
-| ⭐ **全頁評論 snippet** | 預設內建（複製 `references/interaction-patterns.md` § 全頁評論系統 整段進 `</body>` 前）|
+| ⭐ **風格設定面板**（每頁都有） | 「風格設定」按鈕：頁面有範本底部列的「預覽摘要」（`id="preview-btn"`）就停在它左邊（900px 以下只顯示圖示）；沒有底部列就固定在左下角（右下角留給評論工具）。按鈕**不會閃避頁面自己做的固定列**，所以底部列一律用範本那條。面板從按鈕上方打開。固定層＝字級 90–200%、密度、內容寬度（頁面在 `:root` 宣告了 `--wrap-max` 才有這項；範本都有）。**不用手寫**，自檢蓋章時自動注入。調過的值只改畫面、不進複製摘要；讀者按「存成我的預設」後，有拍板摘要的頁會在摘要多一段「設定檔變更」（經評論收集函式自動接上），沒有的頁由按鈕直接複製這段。面板頂端可切中英文（預設跟頁面的 `lang`，讀者切過就記住；英文內容的頁把 `<html lang>` 改成 `en`，面板就預設英文）。切成英文時，頁面上寫了 `data-en="英文"` 的元素會一起換字（範本底部列已標好；腳本執行期組的文字讀 `<html data-vt-lang>` 自己判斷）。`data-en` 只放在純文字元素上：元素裡有子元素（例如計數 span）時只換第一段直接文字、子元素保留；沒有直接文字的元素（空的、只有子元素）切換時會出錯 |
+| ⭐ **內容層調整**（選配，預設 0 項） | 只有當內容有兩種都合理的呈現、讀者可能想自己切換時才加（例如樣張切方案 A／B、藏掉查證佐證），**每頁最多 3 項、每項必寫 hint**（這項會改到頁面上的什麼——沒寫讀者看不出差別）。寫法：`<script type="application/json" id="vt-tweaks">[{"id":"evid","label":"查證備註","options":[["off","顯示"],["on","藏掉"]],"hint":"…"}]</script>` ＋對應 CSS `html[data-tw-evid="on"] .evid{display:none}`，**只寫宣告與 CSS、不寫 JS** |
+| ⭐ **全頁評論 snippet** | 預設內建。**唯一來源是 `assets/base-template.html`**：從它複製評論系統整段（樣式、按鈕與清單、共用複製工具、評論腳本）進 `</body>` 前，不各自修改；設計說明與整合規約見 `references/interaction-patterns.md` § 全頁評論系統（那裡的 snippet 是 base 的同步副本）|
 | ⭐ **預覽 + 複製 modal**（有 export 按鈕時）| 既有「複製給 AI」按鈕點下去 → 彈 modal 顯示完整內容 → 確認後才複製。Pattern 見 `references/interaction-patterns.md` § Multi-format export |
-| ⭐⭐ **複製 builder 必整合所有 user 輸入**（hard rule） | 「複製拍板摘要 / 複製給 AI」類按鈕背後的 `buildSummary()` / `buildPrompt()` builder **必須**滿足三件事、否則違規：<br>① 末尾接 `+ (window.vtCollectComments?.() || '')` 拼全頁評論<br>② 註冊 `window.vtBuildDecisionExport = builderFn` 隱藏 fallback 重複按鈕<br>③ **每個 radio / select 拍板題旁邊必須配 `<textarea data-comment-for="<id>">` 補充框**，builder 內透過 `getComment(id)` 抓取拼進對應行<br>👉 整套寫法見 `references/examples/marathon-decision-sheet/index.html`：搜 `function buildSummary`（含 `getComment` 與末尾拼接 `vtCollectComments`）與緊接其後的 `window.vtBuildDecisionExport = buildSummary`；`vtCollectComments` 本體在評論 snippet 段（搜 `window.vtCollectComments =`）。行號會漂、以函式名為準 |
+| ⭐⭐ **複製 builder 必整合所有 user 輸入**（hard rule） | 「複製拍板摘要 / 複製給 AI」類按鈕背後的 `buildSummary()` / `buildPrompt()` builder **必須**滿足三件事、否則違規：<br>① 末尾接 `+ (window.vtCollectComments?.() || '')` 拼全頁評論<br>② 註冊 `window.vtBuildDecisionExport = builderFn` 隱藏 fallback 重複按鈕<br>③ **每個 radio / select 拍板題旁邊必須配 `<textarea data-comment-for="<id>">` 補充框**，builder 內透過 `getComment(id)` 抓取拼進對應行。補充框**一律常駐可見、可直接輸入**，不收起、不做成「＋ 補充」按鈕（2026-10-27 起：讀者習慣直接有補充框可以輸入）；嫌佔版面就改呈現（空的時候單行高、淡底、聚焦或有內容時長高）<br>👉 整套寫法見 `references/examples/marathon-decision-sheet/index.html`：搜 `function buildSummary`（含 `getComment` 與末尾拼接 `vtCollectComments`）與緊接其後的 `window.vtBuildDecisionExport = buildSummary`；`vtCollectComments` 本體在評論 snippet 段（搜 `window.vtCollectComments =`）。行號會漂、以函式名為準 |
 | ⭐ **Before-After UI mock**（UX audit / 設計提案 / 對比型 review 場景必含；**＋任何待拍板決策題本身涉及 UI/UX 時、該題也必含**）| 每條 finding／每個 UI/UX 決策題用 `.ba-grid` + `.ba-col.before/.after`（多方案則 `現況 ｜ 方案A ｜ 方案B` N 欄）+ `.mock` 並排 → **左側真 HTML mock 出現況畫面 + 紅字標問題點、右側 mock 出修改後畫面**。**禁** ASCII 模擬 / `[表格略]` 抽象描述 / 純文字 bullet 列點 / 只給「採納·不採納」radio 卻不畫畫面。User 一眼看出「現在長怎樣、改完長怎樣」再拍板。**mock 必須貼合該產品實際外觀**（配色 / 字體 / 元件形狀）並用**真實標籤與真實資料**、不畫抽象灰塊（2026-08-29 拍板）。⚠️ 這條管**畫面外觀**變更；**結構 / 流程 / 檔案佈局**變更改用結構 diff（三分法見 `references/component-library.md` § 結構 diff）。判斷哪些決策算 UI/UX + 單方案/多方案兩形態見 `references/do-and-dont.md` § UI/UX 決策題；Pattern + CSS 見 `references/component-library.md` § Before-After UI mock side-by-side |
 
 ---
@@ -229,7 +252,7 @@ description: 把長文件、報告、規格、設計決策、架構說明、教�
 | Code path / 行號 / 函式名 / 變數名 當主要內容 | 對非技術受眾維持：用邏輯描述、必要時 monospace 註腳。⭐ **開發者受眾的程式解說頁例外**（2026-08-29 拍板）：函式名 / 元件名就是內容本身、檔案路徑降級為灰字註腳（code-shape 元件的做法）|
 | 程式碼路徑形式的清單（如 `packages/x/y/z.ts:34`）出現在 hero 或主視覺 | 影響快速瀏覽；改寫成自然語言 |
 | 深淺色切換（除非使用者明確要求）| 預設淺色 only、減少 CSS 複雜度與 dark mode 適配 bug |
-| ⭐⭐ 對中文套斜體（`font-style: italic` / `<i>` / 會命中中文的 `em` 選擇器）| 中文沒有 italic 字形，瀏覽器只能把正體字整個幾何傾斜（synthetic oblique），筆畫變形、重心歪。強調改用換字重：標題 em 是 `font-weight: 700` ＋ clay 色，內文 em 是 `font-style: normal` ＋ `font-weight: 600`（不上 clay，留住兩層強調的層次差）。另外在 `body` 加一道 `font-synthesis: none` 保險絲（09-23 實測：寫錯了也會逐像素退回正體，西文真 italic 不受影響）——但它不改 computed `font-style`，是防呆網不是許可證，選擇器還是要寫對。`verify.py` 會抓（CJK-italic 檢查），來龍去脈見 `references/incidents.md` 2026-09-11 |
+| ⭐⭐ 對中文套斜體（`font-style: italic` / `<i>` / 會命中中文的 `em` 選擇器）| 中文沒有 italic 字形，瀏覽器只能把正體字整個幾何傾斜（synthetic oblique），筆畫變形、重心歪。強調改用換字重：標題 em 是 `font-weight: 700` ＋ `--clay-d`，內文 em 是 `font-style: normal` ＋ `font-weight: 600`（不上色，留住兩層強調的層次差）。另外在 `body` 加一道 `font-synthesis: none` 保險絲（09-23 實測：寫錯了也會逐像素退回正體，西文真 italic 不受影響）——但它不改 computed `font-style`，是防呆網不是許可證，選擇器還是要寫對。`verify.py` 會抓（CJK 斜體檢查），來龍去脈見 `references/incidents.md` 2026-09-11 |
 | 字數爆炸的長段落 | 改用卡片 / 表格 / 視覺化；段落超過 4 行考慮拆 |
 | ⭐ 整段只有純文字、沒有任何視覺元件 | 能畫的東西寫成文字＝要 user 自己在腦裡還原。每段都先問「這段能不能用畫的」（說明與描述盡量圖像化）|
 | ⭐⭐ 把拍板題全部堆到文件尾段、跟它的背景說明分開 | 讀者拍板時找不到回去的路，於是每張決策卡只好重述背景 → 同件事講兩次。有背景的題就地放在該段末尾，尾段只留不需背景的程序題 |
@@ -251,6 +274,23 @@ description: 把長文件、報告、規格、設計決策、架構說明、教�
 3. 不動 SKILL.md 主檔（除非觸發機制變了）
 
 模板隨用隨加、不需要事先規劃完整。
+
+---
+
+## 使用者的設定檔
+
+位置 `~/.config/html-visualizer/profile.json`（`HTML_VISUALIZER_PROFILE` 可覆寫），**只記使用者明確選過的項目**，沒寫的沿用範本原值。兩半：`tokens`（字型、字級倍率、配色、寬度、密度——自檢蓋章套用）＋ `rules`（寫不成數值的口味，Step 1 讀）；另有 `checkWidths`（版面健檢寬度）與 `checks.noEmoji`。
+
+| 情況 | AI 怎麼做 |
+|---|---|
+| 使用者貼回的訊息有「## 設定檔變更」段落（英文介面是「## Profile changes」） | 照段落裡那一行 `profile.py set …` 執行，完成後回報每個鍵的前後值。**使用者不用自己跑指令** |
+| 使用者口頭說「以後標題都用無襯線」「主色換藍」 | `profile.py set tokens.type.heading=… tokens.color.accent=#…`，回報前後差異 |
+| 使用者要加／改一條文字規則（例如「不要用 emoji」） | 直接編輯 JSON 的 `rules` 陣列，改完跑 `profile.py show` 確認讀得進來（寫壞時 verify 會照空白設定跑並標 ✗）；能機械判斷的另開對應檢查（目前只有 `checks.noEmoji`） |
+| 看設定檔現況 | `profile.py show`（人看）、`show --json`（整份） |
+
+`set` 只接受已知的鍵，打錯字會被拒絕、不會默默寫進去。可用的鍵見 `profile.py set` 的錯誤訊息或檔頭說明。
+
+頁面上「設定檔變更」段裡的 `profile.py` 路徑是產頁當時 skill 的位置；路徑不存在時（例如 plugin 升版換了快取目錄），改用本 skill 目錄下的 `scripts/profile.py`，參數照抄。
 
 ---
 
@@ -296,7 +336,7 @@ open ~/Documents/claude-html/{YYYY-MM}/{slug}-{date}.html   # Linux 用 xdg-open
 | 看 reference | 何時 |
 |---|---|
 | **`scripts/verify.py`** ⭐⭐ | **open 前必跑** — 一行跑完所有自檢（結構 / 識別 / 拍板機制 / 動線 / 呈現品質），依產出類型自動分流。取代過去手打的十來條 grep |
-| `references/incidents.md` | 想知道某條自檢或規則「為什麼存在」時 — 每項檢查對應的真實事故全文。改規則、加檢查項前先讀；新增檢查項時主檔的表加一列、它加一段 |
+| `references/incidents.md` | 動 CJK 斜體檢查或中文強調規則前 — 本庫補的事故全文，含 09-23 `font-synthesis` 逐像素實測的更正 |
 | **`scripts/session-label.sh`** ⭐ | 寫 HTML 前先跑 — 取得本 session 的顯示名與短 id，填進識別 snippet |
 | **`scripts/reindex.py`** ⭐ | 產出存檔後跑 — 重建 `~/Documents/claude-html/index.html` 索引頁 |
 | `references/cn-en-translation-checklist.md` ⭐ | Step 3 審稿必用 — 中英混雜詞替換對照表 + 保留原則（`verify.py` 會用它掃描，但**替換動作仍要人做**）|
@@ -308,9 +348,10 @@ open ~/Documents/claude-html/{YYYY-MM}/{slug}-{date}.html   # Linux 用 xdg-open
 | **`references/session-identity.md`** ⭐ | **每份產出都要** — session 標籤取得方式 + 三層識別 snippet（分頁標題前綴 / 彩色 favicon / 頂部色帶徽章），解決多視窗並行時分不出來源 |
 | `references/layout-patterns.md` | 整體 layout — sidebar / sticky / grid / 響應式 |
 | `references/do-and-dont.md` | 進階風格規範、何時不要做什麼 |
-| **`references/examples/explainer/`** ⭐ | **純展示預設範本** — 教學 / 概念解釋 / 報告盤點。**兩套內容骨架**（A 概念解釋七段 / B 報告六段）+ 為什麼是這個順序 + 解釋類元件 + 漸進揭露示範 |
+| **`references/examples/explainer/`** ⭐ | **教學／概念解釋的範本** — 骨架 A 用它的 HTML 起手；骨架 B（報告六段）只取內容順序，版面改從 editorial-report 起手。**兩套內容骨架**（A 概念解釋七段 / B 報告六段）+ 為什麼是這個順序 + 解釋類元件 + 漸進揭露示範 |
+| **`references/examples/editorial-report/`** ⭐ | **報告類的版面範本** — 報告／盤點／健檢／研究結論，不論有沒有 1–4 題拍板。結論數字 hero、頂端章節列、章節開場、主張引言帶、規格對照雙欄卡、刻意不做＋重開條件；README 寫了沒有拍板題時怎麼裁 |
 | **`references/examples/marathon-decision-sheet/`** ⭐ | **拍板預設範本** — marathon 收尾 / 決策追認（Anthropic 風 + 就地拍板 + 題目地圖 + 一鍵複製決策摘要）|
-| `references/examples/anthropic-gallery/` | 純展示範例 — 無互動、editorial 質感參考 |
+| `references/examples/anthropic-gallery/` | **風格總覽頁**（2026-10-27 改寫）— 最上面是四份真範例的入口卡（何時用、特徵），其後是共用設計系統的樣張：墨色規則、字級層級、章節編號兩種樣式、卡片／提示框／badge。挑範本或忘了某個元件長相時先看它 |
 | **`references/examples/spec-alignment/`** ⭐ | **規格對齊範本** — 跟老闆 / 業務對齊規格·設計·方向（由上而下 + 使用者操作情境畫面 mock + 只留最終規格/UX/真決策、藏分析推導與內部編號）|
 
 每次跑此 skill 不需要全讀 references、依當下需求 read 對的部分即可。
@@ -325,10 +366,10 @@ open ~/Documents/claude-html/{YYYY-MM}/{slug}-{date}.html   # Linux 用 xdg-open
 | 「給我幾個選項拍板」/「列待確認的決策」 | ✓ | ⭐ marathon-decision-sheet |
 | 「sprint retrospective 整理」/「PR 一次審完一批」 | ✓ | ⭐ marathon-decision-sheet |
 | 任何含「**marathon 收尾**」「**待 QA**」「**未 commit**」「**未 push**」的素材 | ✓ | 拍板題 ≥ 5 → ⭐ marathon-decision-sheet；< 5 → 輕量決策頁 |
-| 「整理這個會議的結論給我看」 | ✓ | ⭐ explainer 骨架 B |
+| 「整理這個會議的結論給我看」 | ✓ | ⭐ editorial-report（順序照骨架 B） |
 | 「寫個 spec 給我 review」 | ✓ | base-template（spec 沒拍板選項時）|
 | 「解釋這段 code 怎麼運作」（內容多時）| ✓ | ⭐ explainer 骨架 A |
-| 「做一份 progress report」 | ✓ | ⭐ explainer 骨架 B |
+| 「做一份 progress report」 | ✓ | ⭐ editorial-report（順序照骨架 B） |
 | 「給我幾個 design alternative 我選」 | ✓ | ⭐ marathon-decision-sheet（有拍板）|
 | 「列一下 tech-debt 給我排序」 | ✓ | ⭐ marathon-decision-sheet（有排序拍板）|
 | 「做個儀表板看資料」 | ✓ | base-template 換 functional token（藍 accent + 純 sans）|
@@ -343,4 +384,4 @@ open ~/Documents/claude-html/{YYYY-MM}/{slug}-{date}.html   # Linux 用 xdg-open
 - ✗ 內容是純技術評估、但塞 sticky bottom bar + radio → 過度設計、user 沒事可選
 - ✗ 內容含「未 commit」「pending QA」「待 user 拍板」字眼、但用 base-template → 漏掉拍板互動
 
-**判斷小心法**：素材裡 grep 一下「拍板 / 追認 / pending / 未 / 待 / TODO / 等 user / approve / confirm」、≥3 個 → 這份要有拍板互動。**接著數實際題數決定份量**：≥ 5 題走 marathon-decision-sheet，< 5 題走輕量決策頁（base-template + 就地拍板卡）。⚠️ 別再只憑關鍵字次數就套重型範本。
+**判斷小心法**：素材裡 grep 一下「拍板 / 追認 / pending / 未 / 待 / TODO / 等 user / approve / confirm」、≥3 個 → 這份要有拍板互動。**接著數實際題數決定份量**：≥ 5 題走 marathon-decision-sheet，< 5 題看主體：主體是拍板走輕量決策頁（base-template + 就地拍板卡），主體是報告走 editorial-report 原樣。⚠️ 別再只憑關鍵字次數就套重型範本。

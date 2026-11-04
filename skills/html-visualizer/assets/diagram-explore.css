@@ -1,20 +1,9 @@
-/* 結構圖探索層 — 與 diagram-explore.js 成對，整段內嵌進頁面 <style>（不外連）。
+/* 結構圖探索層＋浮動說明窗 — 與 diagram-explore.js 成對，整段內嵌進頁面 <style>（不外連）。
    依賴頁面既有 token：--sans --mono --g300 --g700 --slate；缺的用後備值。
-   掛載條件與標記規則見 references/structure-diagrams.md §6.7。 */
+   掛載條件與標記規則見 references/structure-diagrams.md §6.7。
+   說明與追線結果都在浮動窗裡，圖吃滿寬。 */
 .xp {
   --xp-hot: #1f5fbf;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 300px;
-  gap: 14px;
-  align-items: start;
-}
-@media (max-width: 900px) {
-  .xp {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .xp .xp-side {
-    position: static;
-  }
 }
 .xp .figure {
   min-width: 0;
@@ -22,7 +11,7 @@
 .xp .xp-main {
   min-width: 0;
 }
-/* 章節設定資料的 script 也掛 .xp-views，下面的 display:flex 會把它撐成可見文字（0907 實踩）；只給 div */
+/* 章節設定資料的 script 也掛 .xp-views，下面的 display:flex 會把它撐成可見文字；只給 div */
 .xp script.xp-views {
   display: none !important;
 }
@@ -57,40 +46,154 @@
 .xp .xp-note:empty {
   display: none;
 }
-.xp .xp-side {
+.xp .xp-hint {
+  font-size: 12.5px;
+  color: var(--g500, #87867f);
+  margin: 0 0 8px;
+}
+
+/* ── 浮動說明窗（全頁一個，掛在 body 下）── */
+.xp-panel {
+  --xp-hot: #1f5fbf;
+  box-sizing: border-box; /* 不依賴頁面有沒有全域 border-box：手機寬 100% 加內距會凸出畫面 */
+  position: fixed;
+  right: 18px;
+  top: 76px;
+  max-height: calc(100vh - 100px); /* 高度跟著內容走：內容少時不要撐滿、多蓋住圖 */
+  width: min(30em, 92vw);
+  overflow: auto;
   background: #fff;
+  border: 1.5px solid var(--g300, #d1cfc5);
+  border-radius: 12px;
+  box-shadow: 0 14px 44px rgba(20, 20, 19, 0.18);
+  padding: 16px 22px 20px;
+  z-index: 9000;
+  font: 14px/1.7 var(--sans, system-ui, sans-serif);
+  color: var(--slate, #141413);
+  text-align: left;
+}
+.xp-panel[hidden] {
+  display: none;
+}
+.xp-panel.dragging {
+  box-shadow: 0 20px 60px rgba(20, 20, 19, 0.28);
+}
+/* 只管窗自己的圖示；作者放進說明裡的圖照原尺寸（之前套到窗內所有 svg，會把 200×80 的圖壓成 14×14） */
+.xp-grip svg,
+.xp-ibtn svg {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+.xp-grip {
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  font-size: 11.5px;
+  color: var(--g500, #87867f);
+  padding: 2px 80px 8px 0;
+  margin-bottom: 8px;
+  border-bottom: 1px dashed var(--g300, #d1cfc5);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.xp-panel.dragging .xp-grip {
+  cursor: grabbing;
+}
+.xp-ibtn {
+  position: absolute;
+  top: 9px;
   border: 1px solid var(--g300, #d1cfc5);
-  border-radius: 10px;
-  padding: 14px 16px;
-  font-size: 13.5px;
-  position: sticky;
-  top: 12px;
+  background: #fff;
+  border-radius: 6px;
+  padding: 3px 6px;
+  cursor: pointer;
+  color: var(--g700, #3d3d3a);
+  display: flex;
+  align-items: center;
+}
+.xp-ibtn:hover {
+  border-color: var(--xp-hot);
+}
+.xp-flip {
+  right: 44px;
+}
+.xp-close {
+  right: 12px;
+}
+.xp-tag {
+  display: inline-block;
+  font-size: 11px;
+  border-radius: 3px;
+  padding: 1px 8px;
+  background: var(--slate, #141413);
+  color: #fff;
+}
+.xp-tag[hidden] {
+  display: none;
+}
+.xp-panel h3.xp-title {
+  font-family: var(--serif, Georgia, serif);
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 1.35;
+  margin: 6px 0 4px;
+}
+.xp-body h4 {
+  font-family: var(--mono, monospace);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--g500, #87867f);
+  margin: 14px 0 4px;
+}
+.xp-body p {
+  margin: 0 0 6px;
+}
+.xp-panel ul,
+.xp-panel ol {
+  margin: 4px 0;
+  padding-left: 20px;
+}
+.xp-panel ul {
+  list-style: disc;
+}
+.xp-panel ol {
+  list-style: decimal;
+}
+.xp-panel li {
+  margin: 3px 0;
+}
+.xp-dim {
+  color: var(--g500, #87867f);
+}
+.xp-nav {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1.5px solid var(--g200, #e6e3da);
+  font-size: 12.5px;
   color: var(--g700, #3d3d3a);
 }
-.xp .xp-side h3 {
-  margin: 0 0 6px;
-  font-size: 14px;
-  color: var(--slate, #141413);
+.xp-nav[hidden] {
+  display: none;
 }
-.xp .xp-side .hint {
-  color: #87867f;
-  font-size: 12.5px;
-}
-.xp .xp-side ul,
-.xp .xp-side ol {
-  margin: 6px 0;
-  padding-left: 18px;
-}
-.xp .xp-side li {
+.xp-row {
   margin: 2px 0;
 }
-.xp .xp-side .btns {
+.xp-btns {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin: 8px 0;
+  margin-top: 8px;
 }
-.xp .xp-side .btns button {
+.xp-btns button {
   font: 12.5px var(--sans, sans-serif);
   padding: 4px 10px;
   border: 1px solid var(--g300, #d1cfc5);
@@ -99,14 +202,15 @@
   cursor: pointer;
   color: var(--g700, #3d3d3a);
 }
-.xp .xp-side .btns button.active,
-.xp .xp-side .btns button:hover {
+.xp-btns button:hover {
   border-color: var(--xp-hot);
 }
-.xp .xp-side .btns button.active {
+.xp-btns button.active {
   background: var(--xp-hot);
+  border-color: var(--xp-hot);
   color: #fff;
 }
+.xp-panel kbd,
 .xp kbd {
   font: 11px var(--mono, monospace);
   border: 1px solid var(--g300, #d1cfc5);
@@ -169,4 +273,20 @@ svg.xplore .ord {
   font-size: 10px;
   font-weight: 700;
   fill: #fff;
+}
+@media (max-width: 760px) {
+  .xp-panel {
+    left: 0;
+    right: 0;
+    top: auto;
+    bottom: 0;
+    width: 100%;
+    max-height: 64vh;
+    border-radius: 14px 14px 0 0;
+    z-index: 10000;
+  }
+  .xp-grip,
+  .xp-flip {
+    display: none;
+  }
 }
