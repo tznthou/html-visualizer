@@ -522,8 +522,9 @@ if (firstOk) {
     console.log(`  CJK 斜體  ✗ ${total} 處 — 中文沒有 italic 字形，瀏覽器只能幾何傾斜（筆畫變形）`);
     for (const c of cjk) console.log(`         ${c.what}`);
     if (total > cjk.length) console.log(`         …另有 ${total - cjk.length} 處未列出`);
-    console.log(`         改法：強調改用 clay 色 + font-weight:600；真要斜體的純西文片段單獨寫，`);
-    console.log(`         不要放進會命中中文的選擇器。見 references/color-and-typography.md`);
+    console.log(`         改法：讓上列元素變斜的規則改成 font-style: normal。要強調就加粗：內文 em 加 font-weight: 600（不上色），`);
+    console.log(`         標題 em 用 700 + --clay-d。真要斜體的純西文片段單獨寫，不要放進會命中中文的選擇器。`);
+    console.log(`         見 references/color-and-typography.md`);
   } else {
     console.log(`  CJK 斜體  ✓ 無中文被套斜體`);
   }
